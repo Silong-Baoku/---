@@ -1,180 +1,180 @@
-<！doctype<！doctype超文本标记语言>超文本标记语言>
-<超文本标记语言<超文本标记语言朗="zh-CN">朗="zh-CN">
+<!DOCTYPE html>
+<html lang="zh-CN">
  
-<头>
-<元字符集="UTF-8"><元 字符集="UTF-8">
-<元 姓名="视口" 内容="宽度=设备宽度，初始比例=1.0"><元 姓名="视口" 内容="宽度=设备宽度，初始比例=1.0">
-<标题><标题><标题><标题>巳泷资源库</标题>
-<链接rel="样式表"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"><链接 rel="样式表" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<风格><风格>
-:根 {
---原色：#7f52af；
---二次色：#59299c；
---bg-颜色：RGBA(40，20，80，0.2)；
---text-color：#fffff；
---card-bg:RGBA(255，255，255，0.1)；
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>巳泷资源库</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+--primary-color: #7f52af;
+--secondary-color: #59299c;
+--bg-color: rgba(40, 20, 80, 0.2);
+--text-color: #ffffff;
+--card-bg: rgba(255, 255, 255, 0.1);
     }
  
-* {
-边缘: 0;
-填充: 0;
-箱体尺寸: 边框框;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
  
-身体 {
-字体系列：Arial，无衬线；
-背景：线性梯度(135 deg，var(--bg-color)，RGBA(25，25，60，0.3))，
-var(--bg-image)无重复中心中心确定的；
-背景尺寸: 覆盖;
-颜色：var(--text-color)；
-最小高度：100VH；
-过渡：所有0.3s缓解；
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg-color), rgba(25, 25, 60, 0.3)),
+        var(--bg-image) no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text-color);
+      min-height: 100vh;
+      transition: all 0.3s ease;
     }
  
-.容器 {
-宽度: 90%;
-最大宽度：1200px；
-边缘: 0 自动;
-填充：20px；
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
     }
  
-.标题 {
-文本对齐: 中心;
-字体大小: 2他们;
-底边距：30px；
-颜色：var(--text-color)；
+    .title {
+      text-align: center;
+      font-size: 2em;
+      margin-bottom: 30px;
+      color: var(--text-color);
     }
  
-/* 导航栏样式 */
-.nav{
-显示: 弯曲;
-justify-content：中心；
-差距：25px；
-底边距：20px；
-    }
- 
-.nav一个{
-颜色：var(--text-color)；
-文字装饰: 没有一个;
-填充：8px12px；
-边界半径：6px；
-过渡：背景色0.3s缓解，改变0.3s缓解；
-    }
- 
-.nav一个：盘旋{
-背景色：RGBA(255，255，255，0.2)；
-变换：translateY(-2px)；
-    }
- 
-/* 搜索框区域样式 */
-.search-area{
+    /* 导航栏样式 */
+    .nav {
       display: flex;
-弯曲方向：立柱；
-      align-items: center;
-底边距：30px；
+      justify-content: center;
+      gap: 25px;
+      margin-bottom: 20px;
     }
  
-.search-box{
+    .nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+ 
+    .nav a:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+ 
+    /* 搜索框区域样式 */
+    .search-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+ 
+    .search-box {
       display: flex;
       align-items: center;
       background-color: rgba(255, 255, 255, 0.2);
-边界半径：8px；
+      border-radius: 8px;
       overflow: hidden;
-宽度：60%；
-最大宽度：600px；
+      width: 60%;
+      max-width: 600px;
     }
  
-.menu-button{
+    .menu-button {
       padding: 10px 15px;
       background-color: transparent;
       border: none;
       color: var(--text-color);
       cursor: pointer;
       transition: background-color 0.3s ease;
-font-size:1.2em；
+      font-size: 1.2em;
     }
  
-.菜单按钮：悬停{
+    .menu-button:hover {
       background-color: rgba(0, 0, 0, 0.2);
     }
  
-.搜索框输入{
-flex:1；
+    .search-box input {
+      flex: 1;
       padding: 10px;
       border: none;
-大纲：无；
+      outline: none;
       background-color: transparent;
       color: var(--text-color);
     }
  
-.search-box输入：：占位符{
-颜色：#CCC；
+    .search-box input::placeholder {
+      color: #ccc;
     }
  
-.search-icon{
+    .search-icon {
       padding: 10px 15px;
       color: var(--text-color);
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
  
-.search图标：悬停{
+    .search-icon:hover {
       background-color: rgba(0, 0, 0, 0.2);
     }
  
-/* 搜索类型切换样式 */
-.search-type{
+    /* 搜索类型切换样式 */
+    .search-type {
       display: flex;
-对齐-内容：居中；
-间隙：12px；
-margin-top:10px；
+      justify-content: center;
+      gap: 12px;
+      margin-top: 10px;
     }
  
-.search-type a{
+    .search-type a {
       color: var(--text-color);
-文字修饰：无；
-填料：5px10px；
+      text-decoration: none;
+      padding: 5px 10px;
       border-radius: 4px;
       transition: background-color 0.3s ease;
     }
  
-.搜索类型a：悬停{
+    .search-type a:hover {
       background-color: rgba(255, 255, 255, 0.2);
     }
  
-/* 网站卡片样式 */
-.websites-container{
-显示：网格；
-网格模板柱：重复(自动填充，最小值(120px，1fr))；
-间隙：15px；
-margin-top:30px；
+    /* 网站卡片样式 */
+    .websites-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 15px;
+      margin-top: 30px;
     }
  
-.website-card{
-背景色：var(--card-bg)；
+    .website-card {
+      background-color: var(--card-bg);
       border-radius: 8px;
       padding: 10px;
-文本对齐：居中；
-过渡：所有0.3s轻松；
+      text-align: center;
+      transition: all 0.3s ease;
       cursor: pointer;
       overflow: hidden;
-位置：相对；
+      position: relative;
     }
  
-.website-card：悬停{
-背景色：rgba(127，82，175，0.4)；
-变换：translateY(-3px)；
+    .website-card:hover {
+      background-color: rgba(127, 82, 175, 0.4);
+      transform: translateY(-3px);
     }
  
-.website-icon{
-font-size:2EM；
-底边距：8px；
-颜色：var(--primary-color)；
+    .website-icon {
+      font-size: 2em;
+      margin-bottom: 8px;
+      color: var(--primary-color);
     }
  
-.website-name{
-字体大小：0.9em；
-空白：noWrap；
+    .website-name {
+      font-size: 0.9em;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       color: var(--text-color);
@@ -550,173 +550,173 @@ font-size:2EM；
     </div>
   </div>
  
-  <script>
+  <脚本>
     // 初始网站数据（不可删除）
-    const initialWebsites = [
-      { name: 'GitHub', url: 'https://github.com', icon: 'fab fa-github', isInitial: true },
-      { name: '知乎', url: 'https://www.zhihu.com', icon: 'fab fa-zhihu', isInitial: true },
-      { name: 'B站', url: 'https://www.bilibili.com', icon: 'fab fa-bilibili', isInitial: true }
+    const 初始网站 = [
+      { name: 'GitHub', url: 'https://github.com', 图标: 'fab fa-Github', isInitial: 正确 },
+      { name: '知乎', url: 'https://www.zhihu.com', icon: ‘fab fa-zhi-hu’, isInitial: 正确 },
+      { name: 'B站', url: 'https://www.bilibili.com', icon: 'fab fa-bilibili', isInitial: 正确 }
     ];
  
-    // 网站数据 
-    let websites = JSON.parse(localStorage.getItem('websites')) || [...initialWebsites];
+    // 网站数据
+    让 websites = JSON.解析(localStorage.getitem('网站')) || [...初始网站];
  
-    // 主题数据 
-    let theme = JSON.parse(localStorage.getItem('theme')) || {
+    // 主题数据
+    让 theme = JSON.解析(localStorage.getitem('主题')) || {
       primaryColor: '#7f52af',
       secondaryColor: '#59299c',
-      bgColor: 'rgba(40, 20, 80, 0.2)',
-      textColor: '#ffffff',
-      cardBg: 'rgba(255, 255, 255, 0.1)',
+      bgColor: 'rgba(40，20，80，0.2)',
+      TextColor: '#ffffff',
+      cardBg: 'rgba(255，255，255，0.1)',
       bgImage: 'url(https://s21.ax1x.com/2025/06/13/pVAuU4P.jpg)'
     };
  
-    // DOM元素 
+    //DOM元素
     const dom = {
-      menuButton: document.getElementById('menu-button'),
-      settingsModal: document.getElementById('settings-modal'),
-      closeModal: document.getElementById('close-modal'),
-      bgPreview: document.getElementById('bg-preview'),
-      websitesContainer: document.getElementById('websites-container'),
-      applyTheme: document.getElementById('apply-theme'),
-      resetTheme: document.getElementById('reset-theme'),
-      addWebsite: document.getElementById('add-website'),
+      menuButton: document.getElementById('菜单按钮'),
+      settingsModal: document.getElementById('设置-模式'),
+      closeModal: document.getElementById('近模态'),
+      bgPreview: document.getElementById('BG-预览'),
+      webselsContainer: document.getElementById('网站-容器'),
+      applyTheme: document.getElementById('应用主题'),
+      resetTheme: document.getElementById('重置主题'),
+      addwebsite: document.getElementById('添加网站'),
       bgUpload: document.getElementById('bg-upload'),
       websiteNameInput: document.getElementById('website-name'),
-      websiteUrlInput: document.getElementById('website-url'),
-      customWebsitesList: document.getElementById('custom-websites-list'),
-      searchInput: document.getElementById('search-input'),
+      webiteUrlInput: document.getElementById('website-url'),
+      customWebsitesList: document.getElementById('自定义网站列表'),
+      searchInput: document.getElementById('搜索输入'),
       searchEngines: {
-        baidu: document.getElementById('baidu-search'),
-        google: document.getElementById('google-search'),
-        sogou: document.getElementById('sogou-search'),
-        bing: document.getElementById('bing-search'),
-        sm: document.getElementById('sm-search'),
-        weixin: document.getElementById('weixin-search')
+        百度: document.getElementById('百度搜索'),
+        谷歌: document.getElementById('Google搜索'),
+        搜狗: document.getElementById('搜狗搜索'),
+        Bing: document.getElementById('Bing-search'),
+        SM: document.getElementById('sm-search'),
+        伟新: document.getElementById('微信搜索')
       }
     };
  
-    // 初始化应用 
+    // 初始化应用
     function initApp() {
-      // 应用主题 
+      // 应用主题
       applyTheme();
  
-      // 渲染网站卡片 
+      // 渲染网站卡片
       renderWebsites();
  
-      // 渲染自定义网站列表 
+      // 渲染自定义网站列表
       renderCustomWebsitesList();
  
-      // 设置事件监听器 
+      // 设置事件监听器
       setupEventListeners();
  
-      // 初始化搜索框事件 
+      // 初始化搜索框事件
       setupSearchEvents();
     }
  
-    // 应用主题 
+    // 应用主题
     function applyTheme() {
-      document.documentElement.style.setProperty('--primary-color', theme.primaryColor);
-      document.documentElement.style.setProperty('--secondary-color', theme.secondaryColor);
-      document.documentElement.style.setProperty('--bg-color', theme.bgColor);
-      document.documentElement.style.setProperty('--text-color', theme.textColor);
+      document.documentElement.style.setProperty('--原色', theme.primaryColor);
+      document.documentElement.style.setProperty('--辅色', theme.secondaryColor);
+      document.documentElement.style.setProperty('--bg-color', theme.bgcolor);
+      document.documentElement.style.setProperty('--文本颜色', theme.TextColor);
       document.documentElement.style.setProperty('--card-bg', theme.cardBg);
  
-      // 设置背景图片 
-      document.body.style.backgroundImage = `linear-gradient(135deg, ${theme.bgColor}, rgba(25, 25, 60, 0.3)), ${theme.bgImage}`;
-      dom.bgPreview.style.backgroundImage = theme.bgImage;
+      // 设置背景图片
+      document.body.style.BackgroundImage = 线性梯度(135度，${theme.bgcolor}，rgba(25，25，60，0.3))，${theme.bgImage}`;
+      dom.bgPreview.style.BackgroundImage = theme.bgImage;
  
-      // 更新颜色选择器 
-      document.getElementById('primary-color').value = theme.primaryColor;
-      document.getElementById('secondary-color').value = theme.secondaryColor;
+      // 更新颜色选择器
+      document.getElementById('原色').value = theme.primaryColor;
+      document.getElementById('二次色').value = theme.secondaryColor;
       document.getElementById('bg-color').value = rgbToHex(theme.bgColor);
-      document.getElementById('text-color').value = theme.textColor;
+      document.getElementById('文本颜色').value = theme.TextColor;
       document.getElementById('card-bg').value = theme.cardBg;
     }
  
-    // RGB(A)转HEX 
-    function rgbToHex(rgb) {
-      if (rgb.startsWith('#')) return rgb;
+    //RGB(A)转HEX
+    function rgbToHex(RGB) {
+      if (RGB.startswith('#')) return RGB;
  
-      const parts = rgb.match(/^rgba?$$(\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))?$$$/);
-      if (!parts) return '#ffffff';
+      const 部分 = RGB.匹配(/^rgba?$$(\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))?$$$/);
+      if (!部分) return '#ffffff';
  
-      const r = parseInt(parts[1]);
-      const g = parseInt(parts[2]);
-      const b = parseInt(parts[3]);
+      const r = parseInt(部分[1]);
+      const g = parseInt(部分[2]);
+      const b = parseInt(部分[3]);
  
-      return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+      return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).片(1);
     }
  
-    // 渲染网站卡片 
+    // 渲染网站卡片
     function renderWebsites() {
-      dom.websitesContainer.innerHTML = '';
+      dom.webselsContainer.innerHTML = '';
  
       websites.forEach((website) => {
-        const card = document.createElement('div');
-        card.className = 'website-card';
-        card.innerHTML = `
-          <div class="website-icon"><i class="${website.icon}"></i></div>
-          <div class="website-name">${website.name}</div>
-        `;
+        const 卡片 = document.createElement('div');
+        卡片.className = 'website-card';
+        卡片.innerHTML = `
+<div 班级="网站图标"><我 class="${website.图标}"></我></div>
+<div class="网站名称">${website.name}</div>
+`;
  
-        card.addEventListener('click', () => {
-          window.open(website.url, '_blank');
+        卡片.addEventListener('click', () => {
+          窗户.打开(website.url, '_blank');
         });
  
-        dom.websitesContainer.appendChild(card);
+        dom.webselsContainer.appendChild(卡片);
       });
     }
  
-    // 渲染自定义网站列表 
+    // 渲染自定义网站列表
     function renderCustomWebsitesList() {
       dom.customWebsitesList.innerHTML = '';
  
-      const customWebsites = websites.filter(website => !website.isInitial);
+      const customWebsites = websites.过滤器(网站=> !网站.isInitial);
  
-      if (customWebsites.length === 0) {
-        dom.customWebsitesList.innerHTML = '<p style="text-align: center; color: #ccc;">暂无自定义网站</p>';
+      if (customWebsites.长度===0) {
+        dom.customWebsitesList.innerHTML = '<p style="text-align:center；color：#ccc；">暂无自定义网站</p>';
         return;
       }
  
-      customWebsites.forEach((website, index) => {
-        const item = document.createElement('div');
-        item.className = 'website-item';
-        item.innerHTML = `
-          <div class="website-item-info">
-            <div class="website-item-icon"><i class="${website.icon}"></i></div>
-            <div>${website.name}</div>
-          </div>
-          <button class="delete-website-btn" data-index="${index}">删除</button>
-        `;
+      customWebsites.forEach((网站, index) => {
+        const 项 = document.createElement('div');
+        项.className = 'website-item';
+        项.innerHTML = `
+<div 班级="网站-item-info">
+<div 班级="网站-项目-图标"><我 班级="${website.图标}"></我></div>
+<div>${website.name}</div>
+</div>
+<按钮 班级="delete-website-btn"data-index="${index}">删除</按钮>
+`;
  
-        dom.customWebsitesList.appendChild(item);
+        dom.customWebsitesList.appendChild(项);
       });
  
-      // 添加删除按钮事件监听 
-      document.querySelectorAll('.delete-website-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const index = parseInt(btn.dataset.index);
+      // 添加删除按钮事件监听
+      document.querySelectorAll('.delete-website-btn').foreach(BTN => {
+        BTN.addEventListener('click', (e) => {
+          const index = parseInt(BTN.数据集.index);
           deleteCustomWebsite(index);
         });
       });
     }
  
-    // 删除自定义网站 
+    // 删除自定义网站
     function deleteCustomWebsite(index) {
       // 找到自定义网站的索引（跳过初始网站）
-      const customWebsites = websites.filter(website => !website.isInitial);
-      if (index >= 0 && index < customWebsites.length) {
-        const websiteName = customWebsites[index].name;
-        if (confirm(`确定要删除网站 "${websiteName}" 吗？`)) {
-          // 找到在原始数组中的索引 
-          const originalIndex = websites.findIndex(w => 
-            !w.isInitial && w.name === customWebsites[index].name && w.url === customWebsites[index].url 
+      const 自定义网站 = websites.过滤器(网站=> !网站.isInitial);
+      if (指数>=0 && 指数<自定义网站.长度) {
+        const WebSITENAME = 自定义网站[指数].姓名;
+        if (确认(`确定要删除网站 "${WebSITENAME}" 吗？`)) {
+          // 找到在原始数组中的索引
+          const originalIndex = 网站.FindIndex(w => 
+            !w.isInitial && w.姓名===自定义网站[指数].name && w.url===自定义网站[指数].url 
           );
           
-          if (originalIndex !== -1) {
-            websites.splice(originalIndex, 1);
-            localStorage.setItem('websites', JSON.stringify(websites));
+          if (originalIndex!== -1) {
+            网站.拼接(originalIndex, 1);
+            localStorage.setItem('网站', JSON.使字符串化(网站));
             renderWebsites();
             renderCustomWebsitesList();
           }
@@ -724,174 +724,174 @@ font-size:2EM；
       }
     }
  
-    // 设置事件监听器 
-    function setupEventListeners() {
-      // 打开模态框 
-      dom.menuButton.addEventListener('click', () => {
-        dom.settingsModal.style.display = 'block';
-        document.body.style.overflow = 'hidden'; // 防止背景滚动 
+// 设置事件监听器
+函数setupEventListeners(){
+// 打开模态框
+dom.menuButton.addEventListener('单击'，()=>{
+多姆。 设置模式.风格。 显示='块'；
+文件。 身体.风格。 溢出='隐藏'；//防止背景滚动
       });
  
-      // 关闭模态框 
-      dom.closeModal.addEventListener('click', () => {
-        dom.settingsModal.style.display = 'none';
-        document.body.style.overflow = ''; // 恢复背景滚动 
+// 关闭模态框
+dom.closeModal.addEventListener('click'，()=>{
+多姆。 设置模式.风格。 显示='无'；
+document.body.style。溢出=”；//恢复背景滚动
       });
  
-      // 点击模态框外部关闭 
-      dom.settingsModal.addEventListener('click', (e) => {
-        if (e.target === dom.settingsModal) {
-          dom.settingsModal.style.display = 'none';
-          document.body.style.overflow = ''; // 恢复背景滚动 
+// 点击模态框外部关闭
+Dom.settingsModal.AddEventListener('click'，(e)=>{
+if(e.目标===dom.设置模式){
+多姆。 设置模式.风格.显示='无'；
+文件。 身体.风格.溢出=”；//恢复背景滚动
         }
       });
  
-      // 标签页切换 
-      document.querySelectorAll('.modal-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
-          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+// 标签页切换
+文件。querySelectorAll('.modal-tab').forEach(标签=>{
+tab.addEventListener('单击'，()=>{
+文件。querySelectorAll('.modal-tab')。foreach(t=>t.classList.移除('活动'))；
+文件。querySelectorAll('.tab-content')。foreach(c=>c.classList.移除('活动'))；
  
-          tab.classList.add('active');
-          document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
+tab.classList。添加('活动')；
+document.getElementById('${tab.数据集.tab}-tab').classList。添加('活动')；
         });
       });
  
-      // 应用主题 
-      dom.applyTheme.addEventListener('click', () => {
-        theme.primaryColor = document.getElementById('primary-color').value;
-        theme.secondaryColor = document.getElementById('secondary-color').value;
-        theme.bgColor = hexToRgb(document.getElementById('bg-color').value, 0.2);
-        theme.textColor = document.getElementById('text-color').value;
-        theme.cardBg = hexToRgb(document.getElementById('card-bg').value, 0.1);
+// 应用主题
+dom.applyTheme.addEventListener('单击'，()=>{
+theme.primaryColor=document.getElementById('原色')。价值；
+theme.secondaryColor=document.getElementById('二次色')。价值；
+主题。bgcolor=hexToRgb(document.getElementById('bg-color')。价值，0.2)；
+theme.TextColor=document.getElementById('文本颜色').价值；
+主题。cardBg=hexToRgb(document.getElementById('card-bg')。价值，0.1)；
  
-        localStorage.setItem('theme', JSON.stringify(theme));
-        applyTheme();
-        dom.settingsModal.style.display = 'none';
-        document.body.style.overflow = ''; // 恢复背景滚动 
+localStorage.setItem('主题'，JSON.使字符串化(主题))；
+applyTheme()；
+多姆。 设置模式.风格。 显示='无'；
+文件.身体.风格.溢出 = ''; // 恢复背景滚动
       });
  
-      // HEX转RGB(A)
-      function hexToRgb(hex, alpha) {
-        const r = parseInt(hex.slice(1, 3), 16);
-        const g = parseInt(hex.slice(3, 5), 16);
-        const b = parseInt(hex.slice(5, 7), 16);
+//HEX转RGB(A)
+函数hexToRgb(十六进制，阿尔法){
+constr=parseInt(十六进制.片(1，3)，16)；
+常量G=parseInt(十六进制.片(3，5)，16)；
+常数B=parseInt(十六进制.片(5，7)，16)；
  
-        return alpha ? `rgba(${r}, ${g}, ${b}, ${alpha})` : `rgb(${r}, ${g}, ${b})`;
+返回阿尔法？'RGBA(${r}，${g}，${b}，${阿尔法})'：'RGB(${r}，${g}，${b})'；
       }
  
-      // 重置主题 
-      dom.resetTheme.addEventListener('click', () => {
-        theme = {
-          primaryColor: '#7f52af',
-          secondaryColor: '#59299c',
-          bgColor: 'rgba(40, 20, 80, 0.2)',
-          textColor: '#ffffff',
-          cardBg: 'rgba(255, 255, 255, 0.1)',
-          bgImage: 'url(https://s21.ax1x.com/2025/06/13/pVAuU4P.jpg)'
+// 重置主题
+dom.resetTheme.addEventListener('单击'，()=>{
+主题={
+primaryColor：'#7f52af'，
+secondaryColor：'#59299c'，
+bgcolor：'rgba(40，20，80，0.2)'，
+TextColor：'#ffffff'，
+cardBg：'rgba(255，255，255，0.1)'，
+bgImage：'url(https://s21.ax1x.com/2025/06/13/pVAuU4P.jpg)'
         };
  
-        localStorage.setItem('theme', JSON.stringify(theme));
-        applyTheme();
+localStorage.setItem('主题'，JSON.使字符串化(主题))；
+applyTheme()；
       });
  
-      // 添加网站 
-      dom.addWebsite.addEventListener('click', () => {
-        const name = dom.websiteNameInput.value.trim();
-        const url = dom.websiteUrlInput.value.trim();
-        const icon = document.getElementById('website-icon').value;
+// 添加网站
+dom.addwebsite.addEventListener('单击'，()=>{
+常量姓名=dom.websiteNameInput。价值。修剪()；
+常量URL=dom.webiteUrlInput。价值。修剪()；
+Const图标=文件.getElementById('网站图标').价值；
  
-        if (!name || !url) {
-          alert('请输入网站名称和URL');
-          return;
+如果(！姓名||！URL){
+警惕的('请输入网站名称和URL')；
+返回;
         }
  
-        // 检查URL是否有效 
-        if (!isValidUrl(url)) {
-          alert('请输入有效的URL，例如: https://example.com');
-          return;
+//检查URL是否有效
+if(！isValidUrl(URL)){
+警惕的('请输入有效的URL，例如： https://example.com');
+返回；
         }
  
-        const newWebsite = {
-          name,
-          url: url.includes('://') ? url : `https://${url}`,
-          icon,
-          isInitial: false 
+ConstnewWebsite={
+姓名,
+URL:URL。包括('：//')？URL：‘https://${url}'，
+图标,
+isInitial：假的
         };
  
-        websites.push(newWebsite);
-        localStorage.setItem('websites', JSON.stringify(websites));
-        renderWebsites();
-        renderCustomWebsitesList();
+网站.推(新建网站)；
+localStorage.setItem('网站'，JSON.使字符串化(网站))；
+renderWebsites()；
+renderCustomWebsitesList()；
  
-        // 重置表单 
-        dom.websiteNameInput.value = '';
-        dom.websiteUrlInput.value = '';
-        document.getElementById('website-icon').value = 'fas fa-globe';
+// 重置表单
+dom.websiteNameInput。价值=”；
+dom.webiteUrlInput。价值=”；
+文件.getElementById('网站图标').价值='FAS fa-globe'；
       });
  
-      // 上传背景图片 
-      dom.bgUpload.addEventListener('change', function (e) {
-        const file = e.target.files[0];
-        if (!file) return;
+// 上传背景图片// 上传背景图片
+Dom.bgUpload.addEventListener('更改'，功能(e){
+Const文件=e.目标.文件[0]；
+如果 (! 文件) 返回;
  
-        if (!file.type.match('image.*')) {
-          alert('请选择图片文件');
-          return;
+如果 (! 文件.类型.匹配('图像。 *')) {
+警惕的('请选择图片文件');
+返回;
         }
  
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          const imageUrl = e.target.result;
-          dom.bgPreview.style.backgroundImage = `url(${imageUrl})`;
-          theme.bgImage = `url(${imageUrl})`;
-          localStorage.setItem('theme', JSON.stringify(theme));
-          document.body.style.backgroundImage = `linear-gradient(135deg, ${theme.bgColor}, rgba(25, 25, 60, 0.3)), ${theme.bgImage}`;
+Const读者=新的FileReader()；
+读者.onload=功能(e){
+ConstimageUrl=e.目标.结果；
+Dom.bgPreview。风格.BackgroundImage='URL(${imageUrl})'；
+主题.bgImage='URL(${imageUrl})'；
+localStorage.setItem('主题'，JSON.使字符串化(主题))；
+文件.身体.风格.BackgroundImage=线性梯度(135度，${主题.bgcolor}，rgba(25，25，60，0.3))，${主题.bgImage}`;
         };
-        reader.readAsDataURL(file);
+读者.readAsDataURL(文件)；
       });
     }
  
-    // 设置搜索框事件 
-    function setupSearchEvents() {
-      // 输入时更新搜索链接 
-      dom.searchInput.addEventListener('input', function() {
-        const query = encodeURIComponent(this.value);
-        Object.values(dom.searchEngines).forEach(engine => {
-          const baseUrl = engine.href.split('=')[0];
-          engine.href = baseUrl + '=' + query;
+// 设置搜索框事件
+功能setupSearchEvents(){
+// 输入时更新搜索链接
+Dom.searchInput.addEventListener('输入'，功能(){
+Const查询=编码URIComponent(这.价值)；
+对象.值(Dom.searchEngines).forEach(引擎=>{
+常数baseUrl=引擎.href.分离('=')[0]；
+引擎.href=baseUrl+'='+查询；
         });
       });
  
-      // 回车键搜索 
-      dom.searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          search();
+// 回车键搜索
+Dom.searchInput.addEventListener('按键'，功能(e){
+如果(e.钥匙==='输入'){
+搜索();
         }
       });
     }
  
-    // 验证URL 
-    function isValidUrl(string) {
-      try {
-        new URL(string);
-        return true;
-      } catch (_) {
-        return false;
+//验证URL
+函数isValidUrl(线){
+尝试{
+新的URL(线)；
+返回正确;
+} 赶上 (_) {
+返回假的;
       }
     }
  
-    // 简单搜索函数 
-    function search() {
-      const input = dom.searchInput.value;
-      if (input) {
-        window.open(`https://www.baidu.com/s?wd=${encodeURIComponent(input)}`, '_blank');
+// 简单搜索函数
+功能搜索(){
+Const输入=dom.searchInput。价值；
+如果 (输入) {
+窗户.打开('https://www.baidu.com/s?wd=${encode URIComponent(输入)}'，'_blank');
       }
     }
  
-    // 页面加载时初始化 
-    document.addEventListener('DOMContentLoaded', initApp);
-  </script>
-</body>
+// 页面加载时初始化
+文件.addEventListener('DOMContentLoaded'，initApp)；
+</脚本>
+</身体>
  
-</html>
+</超文本标记语言>
