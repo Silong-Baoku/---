@@ -420,7 +420,7 @@
  
 <body>
   <div class="container">
-    <h1 class="title">知客驿站</h1>
+    <h1 class="title">巳泷资源库</h1>
  
     <!-- 搜索区域 -->
     <div class="search-area">
@@ -771,23 +771,23 @@
         document.body.style.overflow = ''; // 恢复背景滚动 
       });
  
-      // HEX转RGB(A)
+      //HEX转RGB(A)
       function hexToRgb(hex, alpha) {
         const r = parseInt(hex.slice(1, 3), 16);
-        const g = parseInt(hex.slice(3, 5), 16);
+        const g=parseInt(十六进制.片(3, 5), 16);
         const b = parseInt(hex.slice(5, 7), 16);
  
-        return alpha ? `rgba(${r}, ${g}, ${b}, ${alpha})` : `rgb(${r}, ${g}, ${b})`;
+        return 阿尔法 ? 'rgba(${r}, ${g}, ${b}, ${阿尔法})` : 'RGB(${r}, ${g}, ${b})`;
       }
  
-      // 重置主题 
-      dom.resetTheme.addEventListener('click', () => {
+      // 重置主题
+      dom.resetTheme.addEventListener('click', ()=>{
         theme = {
           primaryColor: '#7f52af',
           secondaryColor: '#59299c',
-          bgColor: 'rgba(40, 20, 80, 0.2)',
+          bgColor: 'rgba(40，20，80，0.2)',
           textColor: '#ffffff',
-          cardBg: 'rgba(255, 255, 255, 0.1)',
+          cardBg: 'rgba(255，255，255，0.1)',
           bgImage: 'url(https://s21.ax1x.com/2025/06/13/pVAuU4P.jpg)'
         };
  
@@ -795,103 +795,103 @@
         applyTheme();
       });
  
-      // 添加网站 
-      dom.addWebsite.addEventListener('click', () => {
-        const name = dom.websiteNameInput.value.trim();
-        const url = dom.websiteUrlInput.value.trim();
-        const icon = document.getElementById('website-icon').value;
+      // 添加网站
+      dom.addwebsite.addEventListener('click', ()=>{
+        const name = dom.websiteNameInput.value.修剪();
+        const url = dom.webiteUrlInput.value.修剪();
+        const icon = document.getElementById('网站图标').value;
  
         if (!name || !url) {
-          alert('请输入网站名称和URL');
-          return;
+          警惕的('请输入网站名称和URL');
+返回；
         }
  
-        // 检查URL是否有效 
+        //检查URL是否有效
         if (!isValidUrl(url)) {
-          alert('请输入有效的URL，例如: https://example.com');
-          return;
+          alert('请输入有效的URL，例如：https://example.com');
+返回；
         }
  
-        const newWebsite = {
+        const newWebsite={
           name,
-          url: url.includes('://') ? url : `https://${url}`,
-          icon,
-          isInitial: false 
+          url: url.包括('://') ? url : 'https://${url}'，
+图标，
+          isInitial: 假的 
         };
  
-        websites.push(newWebsite);
-        localStorage.setItem('websites', JSON.stringify(websites));
+        websites.推(newWebsite);
+        localStorage.setItem('网站', JSON.stringify(websites));
         renderWebsites();
         renderCustomWebsitesList();
  
-        // 重置表单 
-        dom.websiteNameInput.value = '';
-        dom.websiteUrlInput.value = '';
-        document.getElementById('website-icon').value = 'fas fa-globe';
+        // 重置表单
+        dom.websiteNameInput.value='';
+        dom.webiteUrlInput.value='';
+        document.getElementById('网站图标').value='fas fa-globe';
       });
  
-      // 上传背景图片 
-      dom.bgUpload.addEventListener('change', function (e) {
-        const file = e.target.files[0];
-        if (!file) return;
+// 上传背景图片// 上传背景图片
+dom.bgUpload.addEventListener('更改'，函数(e){
+常量文件=E.目标。文件[0]；
+if(！file)返回；
  
-        if (!file.type.match('image.*')) {
-          alert('请选择图片文件');
-          return;
+if(！file.type.匹配('图像。*')){
+警惕的('请选择图片文件');
+返回；
         }
  
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          const imageUrl = e.target.result;
-          dom.bgPreview.style.backgroundImage = `url(${imageUrl})`;
-          theme.bgImage = `url(${imageUrl})`;
-          localStorage.setItem('theme', JSON.stringify(theme));
-          document.body.style.backgroundImage = `linear-gradient(135deg, ${theme.bgColor}, rgba(25, 25, 60, 0.3)), ${theme.bgImage}`;
+Const读者=新的FileReader()；
+读者.onload=功能(e){
+Const imageUrl=e.target。结果；
+dom.bgPreview.style.BackgroundImage='URL(${imageUrl})'；
+theme.bgImage='URL(${imageUrl})'；
+localStorage.setItem('主题'，JSON.stringify(主题))；
+document.body.style.backgroundImage=线性梯度(135度，${theme.bgColor}，rgba(25，25，60，0.3))，${theme.bgImage}`;
         };
-        reader.readAsDataURL(file);
+reader.readAsDataURL(文件)；
       });
     }
  
-    // 设置搜索框事件 
-    function setupSearchEvents() {
-      // 输入时更新搜索链接 
-      dom.searchInput.addEventListener('input', function() {
-        const query = encodeURIComponent(this.value);
-        Object.values(dom.searchEngines).forEach(engine => {
-          const baseUrl = engine.href.split('=')[0];
-          engine.href = baseUrl + '=' + query;
+// 设置搜索框事件
+函数setupSearchEvents(){
+// 输入时更新搜索链接
+dom.searchInput.addEventListener('输入'，函数(){
+Const查询=encodeURIComponent(这.价值)；
+对象.值(dom.searchEngines).forEach(引擎=>{
+常数baseUrl=引擎.href.分离('=')[0]；
+engine.href=baseUrl+'='+查询；
         });
       });
  
-      // 回车键搜索 
-      dom.searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          search();
+// 回车键搜索
+多姆多姆.searchInput.addEventListener('按键'，函数(e){searchInput.addEventListener('按键'，函数(e){searchInput.addEventListener('按键'，函数(e){
+if(EIF(e.钥匙==='输入'){钥匙==='输入'){
+搜索()搜索();
         }
       });
     }
  
-    // 验证URL 
-    function isValidUrl(string) {
-      try {
-        new URL(string);
-        return true;
-      } catch (_) {
-        return false;
+//验证URL
+函数isValidUrl(线){
+尝试{
+新的URL(线)；
+返回正确；
+}} 赶上 (_) {赶上 (_) {
+返回假的；
       }
     }
  
-    // 简单搜索函数 
-    function search() {
-      const input = dom.searchInput.value;
-      if (input) {
-        window.open(`https://www.baidu.com/s?wd=${encodeURIComponent(input)}`, '_blank');
+// 简单搜索函数
+功能搜索(){
+Constinput=dom.searchInput.价值；
+if(输入){
+窗户窗户.打开('https://www.baidu.com/s?wd=${encodeURIComponent(input)}'，'_blank');打开('https://www.baidu.com/s?wd=${encodeURIComponent(input)}'，'_blank');
       }
     }
  
-    // 页面加载时初始化 
-    document.addEventListener('DOMContentLoaded', initApp);
-  </script>
-</body>
+    // 页面加载时初始化// 页面加载时初始化
+DocumentDocument文件。addEventListener('DOMContentLoaded'，initApp)；addEventListener('DOMContentLoaded'，initApp)；addEventListener('DOMContentLoaded'，initApp)；
+</脚本>/脚本>
+</body>/body>
  
-</html>
+</超文本标记语言>/超文本标记语言>
