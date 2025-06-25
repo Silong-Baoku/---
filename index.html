@@ -1,897 +1,2281 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
- 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>巳泷资源库</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <style>
-    :root {
---primary-color: #7f52af;
---secondary-color: #59299c;
---bg-color: rgba(40, 20, 80, 0.2);
---text-color: #ffffff;
---card-bg: rgba(255, 255, 255, 0.1);
-    }
- 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
- 
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, var(--bg-color), rgba(25, 25, 60, 0.3)),
-        var(--bg-image) no-repeat center center fixed;
-      background-size: cover;
-      color: var(--text-color);
-      min-height: 100vh;
-      transition: all 0.3s ease;
-    }
- 
-    .container {
-      width: 90%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
- 
-    .title {
-      text-align: center;
-      font-size: 2em;
-      margin-bottom: 30px;
-      color: var(--text-color);
-    }
- 
-    /* 导航栏样式 */
-    .nav {
-      display: flex;
-      justify-content: center;
-      gap: 25px;
-      margin-bottom: 20px;
-    }
- 
-    .nav a {
-      color: var(--text-color);
-      text-decoration: none;
-      padding: 8px 12px;
-      border-radius: 6px;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-    }
- 
-    .nav a:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-    }
- 
-    /* 搜索框区域样式 */
-    .search-area {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 30px;
-    }
- 
-    .search-box {
-      display: flex;
-      align-items: center;
-      background-color: rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-      overflow: hidden;
-      width: 60%;
-      max-width: 600px;
-    }
- 
-    .menu-button {
-      padding: 10px 15px;
-      background-color: transparent;
-      border: none;
-      color: var(--text-color);
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      font-size: 1.2em;
-    }
- 
-    .menu-button:hover {
-      background-color: rgba(0, 0, 0, 0.2);
-    }
- 
-    .search-box input {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      outline: none;
-      background-color: transparent;
-      color: var(--text-color);
-    }
- 
-    .search-box input::placeholder {
-      color: #ccc;
-    }
- 
-    .search-icon {
-      padding: 10px 15px;
-      color: var(--text-color);
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
- 
-    .search-icon:hover {
-      background-color: rgba(0, 0, 0, 0.2);
-    }
- 
-    /* 搜索类型切换样式 */
-    .search-type {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 10px;
-    }
- 
-    .search-type a {
-      color: var(--text-color);
-      text-decoration: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      transition: background-color 0.3s ease;
-    }
- 
-    .search-type a:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
- 
-    /* 网站卡片样式 */
-    .websites-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 15px;
-      margin-top: 30px;
-    }
- 
-    .website-card {
-      background-color: var(--card-bg);
-      border-radius: 8px;
-      padding: 10px;
-      text-align: center;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      overflow: hidden;
-      position: relative;
-    }
- 
-    .website-card:hover {
-      background-color: rgba(127, 82, 175, 0.4);
-      transform: translateY(-3px);
-    }
- 
-    .website-icon {
-      font-size: 2em;
-      margin-bottom: 8px;
-      color: var(--primary-color);
-    }
- 
-    .website-name {
-      font-size: 0.9em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: var(--text-color);
-    }
- 
-    /* 模态框样式 */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
-      z-index: 1000;
-      overflow-y: auto;
-    }
- 
-    .modal-content {
-      background-color: rgba(40, 20, 80, 0.9);
-      padding: 20px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 500px;
-      margin: 30px auto;
-    }
- 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
- 
-    .modal-title {
-      font-size: 1.5em;
-      color: var(--text-color);
-    }
- 
-    .close-modal {
-      background: none;
-      border: none;
-      color: var(--text-color);
-      font-size: 1.5em;
-      cursor: pointer;
-    }
- 
-    .modal-tabs {
-      display: flex;
-      margin-bottom: 20px;
-    }
- 
-    .modal-tab {
-      padding: 10px 15px;
-      background-color: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: var(--text-color);
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
- 
-    .modal-tab.active {
-      background-color: var(--primary-color);
-    }
- 
-    .tab-content {
-      display: none;
-    }
- 
-    .tab-content.active {
-      display: block;
-    }
- 
-    .form-group {
-      margin-bottom: 15px;
-    }
- 
-    .form-label {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--text-color);
-    }
- 
-    .form-input {
-      width: 100%;
-      padding: 8px;
-      border-radius: 5px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background-color: rgba(255, 255, 255, 0.1);
-      color: var(--text-color);
-    }
- 
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 20px;
-    }
- 
-    .btn {
-      padding: 8px 16px;
-      border-radius: 4px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
- 
-    .btn-primary {
-      background-color: var(--primary-color);
-      color: white;
-    }
- 
-    .btn-secondary {
-      background-color: rgba(255, 255, 255, 0.1);
-      color: var(--text-color);
-    }
- 
-    .color-picker {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-    }
- 
-    .color-picker label {
-      width: 100px;
-    }
- 
-    .color-picker input[type="color"] {
-      width: 50px;
-      height: 30px;
-      border: none;
-      background: none;
-    }
- 
-    .bg-preview {
-      width: 100%;
-      height: 120px;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      background-size: cover;
-      background-position: center;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-    }
- 
-    .file-upload {
-      position: relative;
-      margin-bottom: 15px;
-    }
- 
-    .file-upload input {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      cursor: pointer;
-    }
- 
-    .file-upload-label {
-      display: block;
-      padding: 10px;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 5px;
-      text-align: center;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
- 
-    .file-upload-label:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
- 
-    /* 自定义网站列表样式 */
-    .custom-websites-list {
-      max-height: 300px;
-      overflow-y: auto;
-      margin-bottom: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 5px;
-      padding: 10px;
-    }
- 
-    .website-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px;
-      margin-bottom: 5px;
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-    }
- 
-    .website-item:last-child {
-      margin-bottom: 0;
-    }
- 
-    .website-item-info {
-      display: flex;
-      align-items: center;
-    }
- 
-    .website-item-icon {
-      margin-right: 10px;
-      font-size: 1.2em;
-    }
- 
-    .delete-website-btn {
-      background-color: rgba(255, 0, 0, 0.3);
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: 4px 8px;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
- 
-    .delete-website-btn:hover {
-      background-color: rgba(255, 0, 0, 0.5);
-    }
- 
-    /* 响应式设计 */
-    @media (max-width: 768px) {
-      .search-box {
-        width: 90%;
-      }
- 
-      .search-type {
-        flex-wrap: wrap;
-        justify-content: center;
-      }
- 
-      .websites-container {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      }
- 
-      .modal-content {
-        width: 95%;
-      }
-    }
-  </style>
-</head>
- 
-<body>
-  <div class="container">
-    <h1 class="title">巳泷资源库</h1>
- 
-    <!-- 搜索区域 -->
-    <div class="search-area">
-      <div class="search-box">
-        <button class="menu-button" id="menu-button">≡</button>
-        <input type="text" id="search-input" placeholder="百度一下">
-        <span class="search-icon" onclick="search()"><i class="fas fa-search"></i></span>
-      </div>
- 
-      <!-- 搜索类型切换 -->
-      <div class="search-type">
-        <a href="https://www.baidu.com/s?wd=" id="baidu-search" target="_blank">百度</a>
-        <a href="https://www.google.com/search?q=" id="google-search" target="_blank">Google</a>
-        <a href="https://www.sogou.com/web?query=" id="sogou-search" target="_blank">搜狗</a>
-        <a href="https://cn.bing.com/search?q=" id="bing-search" target="_blank">Bing</a>
-        <a href="https://m.sm.cn/s?q=" id="sm-search" target="_blank">神马</a>
-        <a href="https://weixin.sogou.com/weixin?type=2&query=" id="weixin-search" target="_blank">微信</a>
-        <a href="#" target="_blank">纳米AI</a>
-        <a href="#" target="_blank">AI搜索</a>
-        <a href="#" target="_blank">秘塔AI</a>
-      </div>
-    </div>
- 
-    <!-- 网站卡片容器 -->
-    <div class="websites-container" id="websites-container">
-      <!-- 网站卡片将通过JS动态生成 -->
-    </div>
- 
-    <!-- 模态框 -->
-    <div class="modal" id="settings-modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2 class="modal-title">设置</h2>
-          <button class="close-modal" id="close-modal">&times;</button>
-        </div>
- 
-       <div class="modal-tabs">
-  <button class="modal-tab active" data-tab="theme">主题设置</button>
-  <button class="modal-tab" data-tab="websites">网站管理</button>
-  <button class="modal-tab" onclick="window.open('https://link.3ceng.cn/view/4f5b2bd2', '_blank')">巳泷资源库</button>
-</div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>巳泷资源库 - 注册系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-bg: linear-gradient(135deg, #1a0638, #4a1b8c, #2d0a5e);
+            --neon-primary: #bb6bd9;
+            --neon-secondary: #7d3fd4;
+            --neon-accent: #c77dff;
+            --neon-danger: #ff6b9d;
+            --neon-success: #9d4edd;
+            --neon-text: #ffffff;
+            --neon-border: rgba(187, 107, 217, 0.5);
+            --neon-glow-primary: 0 0 10px rgba(187, 107, 217, 0.8), 0 0 20px rgba(187, 107, 217, 0.6), 0 0 30px rgba(187, 107, 217, 0.4);
+            --neon-glow-accent: 0 0 10px rgba(199, 125, 255, 0.8), 0 0 20px rgba(199, 125, 255, 0.6), 0 0 30px rgba(199, 125, 255, 0.4);
+            --neon-glow-danger: 0 0 10px rgba(255, 107, 157, 0.8), 0 0 20px rgba(255, 107, 157, 0.6), 0 0 30px rgba(255, 107, 157, 0.4);
+            --neon-glow-success: 0 0 10px rgba(157, 78, 221, 0.8), 0 0 20px rgba(157, 78, 221, 0.6), 0 0 30px rgba(157, 78, 221, 0.4);
+        }
 
-        <!-- 主题设置标签页 -->
-        <div class="tab-content active" id="theme-tab">
-          <div class="bg-preview" id="bg-preview"></div>
- 
-          <div class="form-group">
-            <label class="form-label">上传背景图片</label>
-            <div class="file-upload">
-              <input type="file" id="bg-upload" accept="image/*">
-              <label for="bg-upload" class="file-upload-label">
-                <i class="fas fa-upload"></i> 选择图片 
-              </label>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background: var(--neon-bg);
+            color: var(--neon-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(145deg, var(--neon-primary), var(--neon-accent));
+            box-shadow: var(--neon-glow-primary);
+            animation: float 15s infinite linear;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-20vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .auth-container {
+            background: rgba(30, 10, 60, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--neon-border);
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: var(--neon-glow-primary);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            animation: shine 6s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                box-shadow: var(--neon-glow-primary);
+            }
+            25% {
+                box-shadow: 0 0 20px rgba(187, 107, 217, 0.8), 0 0 40px rgba(187, 107, 217, 0.6), 0 0 60px rgba(187, 107, 217, 0.4), 0 0 0 0 rgba(199, 125, 255, 0);
+            }
+            50% {
+                box-shadow: var(--neon-glow-primary);
+            }
+            75% {
+                box-shadow: 0 0 20px rgba(187, 107, 217, 0.8), 0 0 40px rgba(187, 107, 217, 0.6), 0 0 60px rgba(187, 107, 217, 0.4), 0 0 0 4px rgba(199, 125, 255, 0.3);
+            }
+            100% {
+                box-shadow: var(--neon-glow-primary);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px var(--neon-primary);
+            background: linear-gradient(90deg, var(--neon-accent), var(--neon-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--neon-accent);
+            box-shadow: var(--neon-glow-accent);
+            animation: pulse 3s infinite;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--neon-accent);
+            font-size: 18px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            background: rgba(25, 5, 50, 0.7);
+            border: 1px solid var(--neon-border);
+            border-radius: 8px;
+            color: var(--neon-text);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--neon-accent);
+            box-shadow: var(--neon-glow-accent);
+        }
+
+        input.error, select.error {
+            border-color: var(--neon-danger);
+            box-shadow: var(--neon-glow-danger);
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .checkbox-container input {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--neon-primary), var(--neon-secondary));
+            color: white;
+            box-shadow: var(--neon-glow-primary);
+        }
+
+        .btn-secondary {
+            background: rgba(25, 5, 50, 0.7);
+            border: 1px solid var(--neon-border);
+            color: var(--neon-accent);
+        }
+        
+        .btn-logout {
+            background: rgba(255, 107, 157, 0.2);
+            border: 1px solid var(--neon-danger);
+            color: var(--neon-danger);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), var(--neon-glow-primary);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #c77dff, #8a4de0);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(35, 10, 70, 0.7);
+            box-shadow: var(--neon-glow-accent);
+        }
+        
+        .btn-logout:hover {
+            background: rgba(255, 107, 157, 0.3);
+            box-shadow: var(--neon-glow-danger);
+        }
+
+        .status-message {
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 14px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .error-message {
+            background: rgba(255, 107, 157, 0.15);
+            border: 1px solid var(--neon-danger);
+            color: #ffb6c9;
+            box-shadow: var(--neon-glow-danger);
+        }
+
+        .success-message {
+            background: rgba(157, 78, 221, 0.15);
+            border: 1px solid var(--neon-success);
+            color: #d0a0ff;
+            box-shadow: var(--neon-glow-success);
+        }
+
+        .warning-message {
+            background: rgba(255, 193, 7, 0.15);
+            border: 1px solid #ffc107;
+            color: #ffe69c;
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.8);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid var(--neon-accent);
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .ban-container {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .ban-icon {
+            font-size: 80px;
+            color: var(--neon-danger);
+            margin-bottom: 20px;
+            text-shadow: var(--neon-glow-danger);
+        }
+
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .footer a {
+            color: var(--neon-accent);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 帮助模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background: rgba(30, 10, 60, 0.95);
+            border: 1px solid var(--neon-accent);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: var(--neon-glow-accent);
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            color: var(--neon-accent);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .close-modal:hover {
+            transform: rotate(90deg);
+            color: var(--neon-danger);
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--neon-border);
+        }
+        
+        .modal-header h2 {
+            font-size: 24px;
+            background: linear-gradient(90deg, var(--neon-accent), var(--neon-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .help-section {
+            margin-bottom: 25px;
+        }
+        
+        .help-section h3 {
+            color: var(--neon-accent);
+            margin-bottom: 10px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .help-section p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .help-section ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+        
+        .help-section li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .contact-info {
+            background: rgba(25, 5, 50, 0.5);
+            border-left: 3px solid var(--neon-accent);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 20px;
+        }
+
+        /* 代号选择模态框 */
+        .code-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .code-option {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(25, 5, 50, 0.7);
+            border: 2px solid var(--neon-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .code-option:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--neon-glow-primary);
+            border-color: var(--neon-accent);
+        }
+
+        .code-option.active {
+            background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+            box-shadow: var(--neon-glow-primary);
+            border-color: var(--neon-accent);
+        }
+
+        .code-option i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        /* 解封模态框 */
+        .unban-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .unban-modal-content {
+            background: rgba(30, 10, 60, 0.95);
+            border: 1px solid var(--neon-danger);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--neon-glow-danger);
+            position: relative;
+            text-align: center;
+        }
+        
+        /* 欢迎页面 */
+        .welcome-container {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .welcome-icon {
+            font-size: 80px;
+            color: var(--neon-accent);
+            margin-bottom: 20px;
+            text-shadow: var(--neon-glow-accent);
+        }
+        
+        .welcome-message {
+            margin-bottom: 25px;
+        }
+        
+        .user-info {
+            background: rgba(25, 5, 50, 0.5);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .user-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(187, 107, 217, 0.2);
+        }
+        
+        .user-info-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* 注册模态框 */
+        .register-modal-content {
+            background: rgba(30, 10, 60, 0.95);
+            border: 1px solid var(--neon-primary);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--neon-glow-primary);
+            position: relative;
+        }
+        
+        .register-form-group {
+            margin-bottom: 20px;
+        }
+        
+        /* 激活码模态框 */
+        .activation-modal-content {
+            background: rgba(30, 10, 60, 0.95);
+            border: 1px solid var(--neon-success);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--neon-glow-success);
+            position: relative;
+        }
+        
+        .activation-instructions {
+            background: rgba(25, 5, 50, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 3px solid var(--neon-accent);
+        }
+        
+        .activation-instructions p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .activation-code {
+            font-weight: bold;
+            color: var(--neon-success);
+            text-shadow: var(--neon-glow-success);
+            font-size: 18px;
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(157, 78, 221, 0.1);
+            border-radius: 8px;
+        }
+
+        /* 密码查询按钮样式 */
+        .password-query {
+            position: absolute;
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--neon-accent);
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+        
+        .password-query:hover {
+            color: var(--neon-primary);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        /* 查询模态框样式 */
+        .query-modal-content {
+            background: rgba(30, 10, 60, 0.95);
+            border: 1px solid var(--neon-primary);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--neon-glow-primary);
+            position: relative;
+        }
+        
+        .query-modal-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--neon-border);
+        }
+        
+        .query-modal-header h2 {
+            font-size: 22px;
+            background: linear-gradient(90deg, var(--neon-accent), var(--neon-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .query-result {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(25, 5, 50, 0.5);
+            border-radius: 8px;
+            border-left: 3px solid var(--neon-accent);
+            text-align: left;
+            display: none;
+        }
+        
+        .query-result p {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .query-result .password {
+            font-weight: bold;
+            color: var(--neon-success);
+            font-size: 18px;
+            text-shadow: var(--neon-glow-success);
+        }
+        
+        .note-box {
+            background: rgba(255, 193, 7, 0.15);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        /* 新增复制按钮样式 */
+        .copy-btn {
+            background: rgba(157, 78, 221, 0.2);
+            border: 1px solid var(--neon-success);
+            color: var(--neon-success);
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(157, 78, 221, 0.3);
+            box-shadow: var(--neon-glow-success);
+        }
+        
+        .copy-btn i {
+            margin-right: 5px;
+        }
+        
+        /* 激活码文本样式调整 */
+        .activation-text {
+            background: rgba(157, 78, 221, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            color: var(--neon-success);
+            text-shadow: var(--neon-glow-success);
+            font-size: 16px;
+            word-break: break-all;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 0;
+        }
+        
+        .activation-text:hover {
+            background: rgba(157, 78, 221, 0.2);
+        }
+        
+        /* 视频教程模态框 */
+        .video-modal-content {
+            background: rgba(30, 10, 60, 0.95);
+            border: 1px solid var(--neon-accent);
+            border-radius: 15px;
+            padding: 20px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: var(--neon-glow-accent);
+            position: relative;
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            margin: 20px 0;
+            border-radius: 10px;
+            background: #000;
+        }
+        
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .video-note {
+            text-align: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 15px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 600px) {
+            .auth-container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 22px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .logo {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+            
+            .modal-header h2 {
+                font-size: 20px;
+            }
+            
+            .code-option {
+                width: 70px;
+                height: 70px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .auth-container {
+                padding: 15px;
+            }
+            
+            input, select, .btn {
+                padding: 12px 12px 12px 40px;
+            }
+            
+            .input-with-icon i {
+                font-size: 16px;
+                left: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 粒子背景容器 -->
+    <div class="particles-container" id="particles"></div>
+    
+    <!-- 主注册容器 -->
+    <div class="auth-container" id="authContainer">
+        <div class="header">
+            <div class="logo">
+                <img src="https://s21.ax1x.com/2025/06/23/pVZxP3R.jpg" alt="巳泷资源库" id="avatarImg">
             </div>
-          </div>
- 
-          <h3>颜色设置</h3>
- 
-          <div class="color-picker">
-            <label for="primary-color">主色:</label>
-            <input type="color" id="primary-color" value="#7f52af">
-          </div>
- 
-          <div class="color-picker">
-            <label for="secondary-color">次色:</label>
-            <input type="color" id="secondary-color" value="#59299c">
-          </div>
- 
-          <div class="color-picker">
-            <label for="bg-color">背景色:</label>
-            <input type="color" id="bg-color" value="#281450">
-          </div>
- 
-          <div class="color-picker">
-            <label for="text-color">文字颜色:</label>
-            <input type="color" id="text-color" value="#ffffff">
-          </div>
- 
-          <div class="color-picker">
-            <label for="card-bg">卡片背景:</label>
-            <input type="color" id="card-bg" value="#ffffff">
-          </div>
- 
-          <div class="form-actions">
-            <button class="btn btn-secondary" id="reset-theme">恢复默认</button>
-            <button class="btn btn-primary" id="apply-theme">应用主题</button>
-          </div>
+            <h1>巳泷资源库</h1>
+            <p>账号注册系统</p>
         </div>
- 
-        <!-- 网站管理标签页 -->
-        <div class="tab-content" id="websites-tab">
-          <h3>添加新网站</h3>
-          <div class="form-group">
-            <label class="form-label" for="website-name">网站名称</label>
-            <input type="text" id="website-name" class="form-input" placeholder="输入网站名称">
-          </div>
- 
-          <div class="form-group">
-            <label class="form-label" for="website-url">网站URL</label>
-            <input type="url" id="website-url" class="form-input" placeholder="https://example.com">
-          </div>
- 
-          <div class="form-group">
-            <label class="form-label" for="website-icon">选择图标</label>
-            <select id="website-icon" class="form-input">
-              <option value="fas fa-globe">地球</option>
-              <option value="fas fa-newspaper">新闻</option>
-              <option value="fas fa-shopping-bag">购物</option>
-              <option value="fas fa-film">视频</option>
-              <option value="fas fa-music">音乐</option>
-              <option value="fas fa-gamepad">游戏</option>
-              <option value="fas fa-book">书籍</option>
-              <option value="fas fa-graduation-cap">学习</option>
-            </select>
-          </div>
- 
-          <div class="form-actions">
-            <button class="btn btn-primary" id="add-website">添加网站</button>
-          </div>
- 
-          <h3 style="margin-top: 30px;">自定义网站列表</h3>
-          <div class="custom-websites-list" id="custom-websites-list">
-            <!-- 自定义网站列表将通过JS动态生成 -->
-          </div>
+        
+        <!-- 状态消息 -->
+        <div class="status-message" id="statusMessage"></div>
+        
+        <!-- 注册表单 -->
+        <form id="authForm">
+            <div class="form-group">
+                <label for="qqNumber"><i class="fas fa-user"></i> QQ号码</label>
+                <div class="input-with-icon">
+                    <i class="fab fa-qq"></i>
+                    <input type="text" id="qqNumber" placeholder="请输入您的QQ号码" required minlength="5" maxlength="10">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="userName"><i class="fas fa-signature"></i> 用户昵称</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-user-circle"></i>
+                    <input type="text" id="userName" placeholder="请输入您的昵称" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="userCode"><i class="fas fa-key"></i> 注册代号</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-user-secret"></i>
+                    <input type="text" id="userCode" placeholder="点击选择注册代号" readonly>
+                </div>
+            </div>
+            
+            <div class="form-group" id="passwordGroup" style="display: none;">
+                <label for="password"><i class="fas fa-lock"></i> 账号密码</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="注册码(0000)">
+                    <!-- 查询密码按钮 -->
+                    <button type="button" class="password-query" id="passwordQueryBtn" title="查询密码">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="checkbox-container">
+                <input type="checkbox" id="rememberMe">
+                <label for="rememberMe">24小时内免登录</label>
+            </div>
+            
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <i class="fas fa-sign-in-alt"></i> 登陆账号
+                </button>
+                <button type="button" class="btn btn-secondary" id="fillBtn">
+                    <i class="fas fa-bolt"></i> 一键填写
+                </button>
+            </div>
+        </form>
+        
+        <div class="footer">
+            <p>遇到问题？<a href="#" id="helpLink"><i class="fas fa-question-circle"></i> 查看帮助</a></p>
+            <p>&copy; 2025 巳泷资源库 | 注册系统 v2.0</p>
         </div>
-      </div>
     </div>
-  </div>
+    
+    <!-- 查询密码模态框 -->
+    <div class="modal" id="queryModal">
+        <div class="modal-content query-modal-content">
+            <span class="close-modal" id="closeQueryModal">&times;</span>
+            <div class="query-modal-header">
+                <h2><i class="fas fa-key"></i> 专属密码查询</h2>
+                <p>系统已自动填充您的账号信息</p>
+            </div>
+            
+        <div class="form-group">
+                <label for="queryQQ" class="auto-filled-label"><i class="fab fa-qq"></i> QQ号码</label>
+                <div class="input-with-icon">
+                    <i class="fab fa-qq"></i>
+                    <input type="text" id="queryQQ" placeholder="请输入您的QQ号码" required class="auto-filled" readonly>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="queryName" class="auto-filled-label"><i class="fas fa-user"></i> 用户昵称</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-user-circle"></i>
+                    <input type="text" id="queryName" placeholder="请输入您的昵称" class="auto-filled" readonly>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="queryCode" class="auto-filled-label"><i class="fas fa-key"></i> 代号</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-user-secret"></i>
+                    <input type="text" id="queryCode" placeholder="请输入您的代号" required class="auto-filled" readonly>
+                </div>
+            </div>
+
+
+            
+            <div class="form-group">
+                <label for="queryPassword"><i class="fas fa-lock"></i> 查询密码</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="queryPassword" placeholder="请输入查询密码" required>
+                </div>
+            </div>
+            
+            <div class="status-message" id="queryStatus"></div>
+            
+            <div class="btn-group">
+                <button class="btn btn-primary" id="submitQueryBtn">
+                    <i class="fas fa-search"></i> 查询密码
+                </button>
+                <button class="btn btn-secondary" id="cancelQueryBtn">
+                    <i class="fas fa-times"></i> 取消
+                </button>
+            </div>
+            
+            <div class="query-result" id="queryResult">
+                <h3><i class="fas fa-key"></i> 查询结果</h3>
+                <p>QQ号码: <span id="resultQQ"></span></p>
+                <p>代号: <span id="resultCode"></span></p>
+                <p>专属密码: <span class="password" id="resultPassword"></span></p>
+                <div class="note-box">
+                    <i class="fas fa-exclamation-circle"></i> 请妥善保管您的密码，不要泄露给他人
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 封禁提示容器 -->
+    <div class="auth-container ban-container" id="banContainer">
+        <div class="ban-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h2>账号已被封禁</h2>
+        <p>您的账号因违规操作已被系统永久封禁</p>
+        <div class="ban-icon" id="unbanIcon" style="margin: 25px 0; font-size: 40px; color: var(--neon-accent); cursor: pointer;">
+            <i class="fas fa-Silong"></i>
+        </div>
+        <div id="unbanMessage" class="status-message" style="display: none;"></div>
+    </div>
+    
+    <!-- 欢迎页面 -->
+    <div class="auth-container" id="welcomeContainer" style="display: none;">
+        <div class="welcome-container">
+            <div class="welcome-icon">
+                <i class="fas fa-user-check"></i>
+            </div>
+            <div class="welcome-message">
+                <h2>注册成功!</h2>
+                <p>欢迎访问巳泷资源库</p>
+            </div>
+            
+            <div class="user-info" id="userInfo">
+                <!-- 用户信息将动态填充 -->
+            </div>
+            
+            <div class="btn-group">
+                <a href="slzm.html" class="btn btn-primary">
+                    <i class="fas fa-database"></i> 进入资源库
+                </a>
+                <button class="btn btn-logout" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i> 退出登录
+                </button>
+            </div>
+            
+            <div class="footer">
+                <p>注册状态：<span id="loginStatus">已登录</span></p>
+                <p>剩余时间：<span id="timeRemaining">24小时</span></p>
+                <p>&copy; 2025 巳泷资源库 | 注册系统 v2.0</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 帮助模态框 -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <div class="modal-header">
+                <h2><i class="fas fa-life-ring"></i> 巳泷资源库帮助中心</h2>
+                <p>账号注册系统使用指南</p>
+            </div>
+            
+            <div class="help-section">
+                <h3><i class="fas fa-user-check"></i> 注册流程说明</h3>
+                <ul>
+                    <li>输入自己的账号昵称以及代号之后可点击放大镜按钮搜索自己的密码</li>
+                    <li>然后需要输入查询码查询自己的账号密码该密码只在公众号和QQ展示</li>
+                    <li>如果未找到账号信息的话可自行注册账号输入密码0000即可注册</li>
+                    <li>把注册好的账号信息发送到微信公众号即可获取激活码</li>
+                </ul>
+            </div>
+            
+            <div class="help-section">
+                <h3><i class="fas fa-key"></i> 注册代号说明</h3>
+                <li>代号是群成员的唯一标识</li>
+                    <li><strong>泷</strong> - 抖音粉丝群的成员</li>
+                    <li><strong>夜</strong> - 受群主邀请的成员</li>
+                    <li><strong>介</strong> - 好友推荐来的成员</li>
+                    <li><strong>川</strong> - 其他渠道来的成员</li>
+                </ul>
+            </div>
+            
+            <div class="help-section">
+                <h3><i class="fas fa-exclamation-triangle"></i> 常见问题解决</h3>
+                <ul>
+                    <li><strong>忘记注册代号：</strong> 请联系管理员查询您的注册代号</li>
+                    <li><strong>专属密码错误：</strong> 请联系管理员巳泷</li>
+                    <li><strong>账号被封禁：</strong> 多次登录失败会导致账号封禁</li>
+                    <li><strong>注册成功后无法跳转：</strong> 尝试刷新页面，或者换其他浏览器尝试，推荐用迅雷浏览器</li>
+                </ul>
+            </div>
+            
+            <div class="contact-info">
+                <h3><i class="fas fa-headset"></i> 技术支持</h3>
+                <p><i class="fab fa-qq"></i> QQ 3213824126</p>
+                <p><i class="fas fa-envelope"></i> 邮箱 xz35238345yun@163.com</p>
+                <p><i class="fas fa-clock"></i> 服务时间 12:00-04:00</p>
+                <p><i class="fas fa-box"></i> 软件包 <a href="rjgx.html" style="color: #c77dff; text-decoration: none;">巳泷资源库apk</a></p>
+                <p><i class="fas fa-globe"></i> 网页版 <a href="https://silong-baoku.github.io/zyk/" style="color: #c77dff; text-decoration: none;" target="_blank">巳泷资源库.html</a></p>
+                <p><i class="fas fa-video"></i> 视频教程 <a href="#" id="videoHelp" style="color: #c77dff; text-decoration: none;">点击查看教程视频</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 代号选择模态框 -->
+    <div class="modal" id="codeModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeCodeModal">&times;</span>
+            <div class="modal-header">
+                <h2><i class="fas fa-user-tag"></i> 选择注册代号</h2>
+                <p>请选择您的专属注册代号</p>
+            </div>
+            
+            <div class="code-options">
+                <div class="code-option" data-code="泷">
+                    <i class="fas fa-dragon"></i>
+                    <span>泷</span>
+                </div>
+                <div class="code-option" data-code="夜">
+                    <i class="fas fa-moon"></i>
+                    <span>夜</span>
+                </div>
+                <div class="code-option" data-code="介">
+                    <i class="fas fa-user-friends"></i>
+                    <span>介</span>
+                </div>
+                <div class="code-option" data-code="川">
+                    <i class="fas fa-water"></i>
+                    <span>川</span>
+                </div>
+            </div>
+            
+            <div class="btn-group" style="margin-top: 30px;">
+                <button class="btn btn-primary" id="confirmCodeBtn">
+                    <i class="fas fa-check"></i> 确认选择
+                </button>
+                <button class="btn btn-secondary" id="cancelCodeBtn">
+                    <i class="fas fa-times"></i> 取消
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 解封模态框 -->
+    <div class="unban-modal" id="unbanModal">
+        <div class="unban-modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-unlock"></i> 账号解封</h2>
+                <p>请输入解封密码以解锁账号</p>
+            </div>
+            
+            <div class="form-group" style="margin: 25px 0;">
+                <div class="input-with-icon">
+                    <i class="fas fa-key"></i>
+                    <input type="password" id="unbanPassword" placeholder="请输入解封密码">
+                </div>
+            </div>
+            
+            <div class="status-message" id="unbanStatus"></div>
+            
+            <div class="btn-group">
+                <button class="btn btn-primary" id="submitUnbanBtn">
+                    <i class="fas fa-check"></i> 提交解封
+                </button>
+                <button class="btn btn-secondary" id="cancelUnbanBtn">
+                    <i class="fas fa-times"></i> 取消
+                </button>
+            </div>
+        </div>
+    </div>
+    
+   <!-- 注册模态框 -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeRegisterModal">&times;</span>
+            <div class="modal-header">
+                <h2><i class="fas fa-user-plus"></i> 账号注册</h2>
+                <p>系统已自动填充账号信息请设置密码</p>
+            </div>
+            
+          <form id="registerForm">
+                <div class="form-group">
+                    <label for="regQQ"><i class="fab fa-qq"></i> QQ号码</label>
+                    <input type="text" id="regQQ" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regName"><i class="fas fa-user"></i> 用户昵称</label>
+                    <input type="text" id="regName" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regCode"><i class="fas fa-tag"></i> 注册代号</label>
+                    <input type="text" id="regCode" readonly>
+                </div>
+
+            
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regPassword"><i class="fas fa-lock"></i> 设置密码</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-key"></i>
+                        <input type="password" id="regPassword" placeholder="请设置您的密码" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regConfirmPassword"><i class="fas fa-lock"></i> 确认密码</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-key"></i>
+                        <input type="password" id="regConfirmPassword" placeholder="请再次输入密码" required>
+                    </div>
+                </div>
+                
+                <div class="status-message" id="registerStatus"></div>
+                
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check"></i> 提交注册
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="cancelRegisterBtn">
+                        <i class="fas fa-times"></i> 取消
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 激活码模态框 -->
+    <div class="modal" id="activationModal">
+        <div class="activation-modal-content">
+            <span class="close-modal" id="closeActivationModal">&times;</span>
+            <div class="modal-header">
+                <h2><i class="fas fa-key"></i> 账号激活</h2>
+                <p>请输入激活码完成账号激活</p>
+            </div>
+            
+            <div class="activation-instructions">
+                <p><strong>首次注册的账号需要激活码：</strong></p>
+                <p>复制下方注册信息并发送到微信巳泷宝库公众号获取激活码：</p>
+                <div class="activation-text" id="activationText">首次注册<span id="activationQQ"></span> <span id="activationName"></span> 【<span id="activationCode"></span>】</div>
+                <button class="copy-btn" id="copyBtn">
+                    <i class="fas fa-copy"></i> 点击复制
+                </button>
+                <p style="font-size: 12px; color: rgba(255,255,255,0.6);">😘不强制收费资源完全免费🥺但能支持宝宝可以去公众号打赏🌹弄这个激活码是为了防止那些退群了还在白嫖资源的家伙😡</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="activationCodeInput"><i class="fas fa-key"></i> 激活码</label>
+                <input type="text" id="activationCodeInput" placeholder="请输入激活码" required>
+            </div>
+            
+            <div class="status-message" id="activationStatus"></div>
+            
+            <div class="btn-group">
+                <button class="btn btn-primary" id="submitActivationBtn">
+                    <i class="fas fa-check"></i> 激活账号
+                </button>
+                <button class="btn btn-secondary" id="cancelActivationBtn">
+                    <i class="fas fa-times"></i> 取消
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 视频教程模态框 -->
+    <div class="modal" id="videoModal">
+        <div class="video-modal-content">
+            <span class="close-modal" id="closeVideoModal">&times;</span>
+            <div class="modal-header">
+                <h2><i class="fas fa-video"></i> 注册系统使用教程</h2>
+                <p>首次使用请观看以下教程视频</p>
+            </div>
+            
+            <div class="video-container">
+                <video id="tutorialVideo" controls>
+                    <source src="spjc.mp4" type="video/mp4">
+                    您的浏览器不支持视频播放。
+                </video>
+            </div>
+            
+            <div class="video-note">
+                <p><i class="fas fa-exclamation-circle"></i> 请仔细观看教程视频，了解系统使用方法</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 授权用户数据
+        let authorizedUsers = JSON.parse(localStorage.getItem('authorizedUsers')) || [
+            { qq: "1323978434", code: "泷", password: "8062", activated: true },
+{ qq: "2908946684", code: "夜", password: "4312", activated: true },
+{ qq: "291516641", code: "夜", password: "5678", activated: true },
+{ qq: "3025233785", code: "夜", password: "9012", activated: true },
+{ qq: "1041547578", code: "夜", password: "3456", activated: true },
+{ qq: "863891398", code: "泷", password: "7890", activated: true },
+{ qq: "3175046319", code: "夜", password: "1357", activated: true },
+{ qq: "1875316335", code: "泷", password: "2468", activated: true },
+{ qq: "3804604918", code: "泷", password: "0246", activated: true },
+{ qq: "2431704839", code: "夜", password: "1593", activated: true },
+{ qq: "3960384997", code: "夜", password: "7531", activated: true },
+{ qq: "3146846491", code: "泷", password: "8642", activated: true },
+{ qq: "3466977552", code: "泷", password: "9753", activated: true },
+{ qq: "3059392643", code: "泷", password: "0987", activated: true },
+{ qq: "3543058039", code: "川", password: "6543", activated: true },
+{ qq: "2021281325", code: "泷", password: "2109", activated: true },
+{ qq: "3272233139", code: "夜", password: "4321", activated: true },
+{ qq: "3300212539", code: "泷", password: "6789", activated: true },
+{ qq: "3396485194", code: "夜", password: "0135", activated: true },
+{ qq: "2700254884", code: "川", password: "2460", activated: true },
+{ qq: "2402755482", code: "泷", password: "8912", activated: true },
+{ qq: "3531824556", code: "夜", password: "3692", activated: true },
+{ qq: "2827532223", code: "泷", password: "5714", activated: true },
+{ qq: "2247936051", code: "夜", password: "8025", activated: true },
+{ qq: "2990782375", code: "夜", password: "1637", activated: true },
+{ qq: "2351757572", code: "泷", password: "9468", activated: true },
+{ qq: "1811153229", code: "夜", password: "0357", activated: true },
+{ qq: "2707758280", code: "夜", password: "2489", activated: true },
+{ qq: "3872658317", code: "夜", password: "1523", activated: true },
+{ qq: "2664967743", code: "泷", password: "6701", activated: true },
+{ qq: "754467738", code: "泷", password: "9852", activated: true },
+{ qq: "875567869", code: "泷", password: "3470", activated: true },
+{ qq: "3133577613", code: "夜", password: "5612", activated: true },
+{ qq: "3024646369", code: "夜", password: "8934", activated: true },
+{ qq: "3313893858", code: "夜", password: "0156", activated: true },
+{ qq: "3930717703", code: "泷", password: "2749", activated: true },
+{ qq: "1022566255", code: "泷", password: "3850", activated: true },
+{ qq: "3538704969", code: "泷", password: "1962", activated: true },
+{ qq: "3372741545", code: "夜", password: "4781", activated: true },
+{ qq: "617098680", code: "泷", password: "5023", activated: true },
+{ qq: "3931353915", code: "泷", password: "6147", activated: true },
+{ qq: "3279310252", code: "夜", password: "8259", activated: true },
+{ qq: "3343869367", code: "泷", password: "0368", activated: true },
+{ qq: "2471099910", code: "泷", password: "1472", activated: true },
+{ qq: "401843969", code: "泷", password: "5803", activated: true },
+{ qq: "55869631", code: "泷", password: "6914", activated: true },
+{ qq: "1404220299", code: "泷", password: "7025", activated: true },
+{ qq: "3769268295", code: "夜", password: "8346", activated: true },
+{ qq: "2732814452", code: "泷", password: "9457", activated: true },
+{ qq: "3083175269", code: "泷", password: "0568", activated: true },
+{ qq: "2578952761", code: "泷", password: "1679", activated: true },
+{ qq: "3953325298", code: "泷", password: "2780", activated: true },
+{ qq: "1062462386", code: "泷", password: "3891", activated: true },
+{ qq: "3058023824", code: "泷", password: "4902", activated: true },
+{ qq: "3159573908", code: "泷", password: "5013", activated: true },
+{ qq: "850401958", code: "夜", password: "6124", activated: true },
+{ qq: "551473278", code: "泷", password: "7235", activated: true },
+{ qq: "2765755169", code: "泷", password: "8346", activated: true },
+{ qq: "2331275312", code: "夜", password: "9457", activated: true },
+{ qq: "775589423", code: "泷", password: "0568", activated: true },
+{ qq: "2759907742", code: "泷", password: "1679", activated: true },
+{ qq: "1599493613", code: "夜", password: "2780", activated: true },
+{ qq: "2155770166", code: "泷", password: "3891", activated: true },
+{ qq: "3544654386", code: "夜", password: "4902", activated: true },
+{ qq: "2922761735", code: "泷", password: "5013", activated: true },
+{ qq: "2210245642", code: "夜", password: "6124", activated: true },
+{ qq: "3319676442", code: "夜", password: "7235", activated: true },
+{ qq: "2115448500", code: "泷", password: "8347", activated: true },
+{ qq: "1678836167", code: "泷", password: "9458", activated: true },
+{ qq: "177271324", code: "泷", password: "0569", activated: true },
+{ qq: "2806520241", code: "泷", password: "1601", activated: true },
+{ qq: "3811732118", code: "泷", password: "2712", activated: true },
+{ qq: "3597931971", code: "夜", password: "3823", activated: true },
+{ qq: "348634201", code: "泷", password: "4934", activated: true },
+{ qq: "1432169967", code: "泷", password: "5045", activated: true },
+{ qq: "2406339133", code: "夜", password: "6156", activated: true },
+{ qq: "1559802785", code: "泷", password: "7267", activated: true },
+{ qq: "1295312386", code: "泷", password: "8378", activated: true },
+{ qq: "2680253169", code: "泷", password: "9489", activated: true },
+{ qq: "994144624", code: "泷", password: "0590", activated: true },
+{ qq: "24764160552", code: "泷", password: "1601", activated: true },
+{ qq: "1512855385", code: "介", password: "2712", activated: true },
+{ qq: "1703181193", code: "泷", password: "3823", activated: true },
+{ qq: "304674300", code: "泷", password: "4934", activated: true },
+{ qq: "383544307", code: "泷", password: "5045", activated: true },
+{ qq: "1018446228", code: "夜", password: "6156", activated: true },
+{ qq: "2419328104", code: "泷", password: "7267", activated: true },
+{ qq: "1139193721", code: "泷", password: "8378", activated: true },
+{ qq: "259405251", code: "夜", password: "9489", activated: true },
+{ qq: "1670649207", code: "夜", password: "0591", activated: true },
+{ qq: "2070326603", code: "夜", password: "1602", activated: true },
+{ qq: "3295365979", code: "泷", password: "2713", activated: true },
+{ qq: "3767481301", code: "夜", password: "3824", activated: true },
+{ qq: "327901578", code: "夜", password: "4935", activated: true },
+{ qq: "3804330175", code: "夜", password: "5046", activated: true },
+{ qq: "1253798692", code: "泷", password: "6157", activated: true },
+{ qq: "2990019657", code: "泷", password: "7268", activated: true },
+{ qq: "346956633", code: "泷", password: "8379", activated: true },
+{ qq: "231559871", code: "泷", password: "9490", activated: true },
+{ qq: "3243028291", code: "夜", password: "0501", activated: true },
+{ qq: "376299499", code: "泷", password: "1612", activated: true },
+{ qq: "625160882", code: "泷", password: "2723", activated: true },
+{ qq: "379564966", code: "泷", password: "3834", activated: true },
+{ qq: "399536315", code: "夜", password: "4945", activated: true },
+{ qq: "127705833", code: "泷", password: "5056", activated: true },
+{ qq: "3536764173", code: "泷", password: "6167", activated: true },
+{ qq: "2434574108", code: "夜", password: "7278", activated: true },
+{ qq: "3581340439", code: "夜", password: "8389", activated: true },
+{ qq: "1516300253", code: "夜", password: "9490", activated: true },
+{ qq: "2694855645", code: "夜", password: "0501", activated: true },
+{ qq: "1876732647", code: "泷", password: "1612", activated: true },
+{ qq: "3386614224", code: "夜", password: "2723", activated: true },
+{ qq: "3238569031", code: "夜", password: "3834", activated: true },
+{ qq: "1510500463", code: "夜", password: "4945", activated: true },
+{ qq: "2132542681", code: "泷", password: "5056", activated: true },
+{ qq: "3531915327", code: "夜", password: "6167", activated: true },
+{ qq: "2776952537", code: "夜", password: "7278", activated: true },
+{ qq: "2072197990", code: "夜", password: "8389", activated: true },
+{ qq: "3072351580", code: "夜", password: "9491", activated: true },
+{ qq: "963385975", code: "夜", password: "0502", activated: true },
+{ qq: "2903065902", code: "泷", password: "1613", activated: true },
+{ qq: "3859490310", code: "泷", password: "2724", activated: true },
+{ qq: "195671158", code: "夜", password: "3835", activated: true },
+{ qq: "1295081853", code: "夜", password: "4946", activated: true },
+{ qq: "3765875133", code: "泷", password: "5057", activated: true },
+{ qq: "3319074122", code: "夜", password: "6168", activated: true },
+{ qq: "2192336290", code: "夜", password: "7279", activated: true },
+{ qq: "2529674508", code: "泷", password: "8390", activated: true },
+{ qq: "3266334914", code: "夜", password: "9401", activated: true },
+{ qq: "3508263501", code: "夜", password: "0512", activated: true },
+{ qq: "3766409574", code: "泷", password: "1623", activated: true },
+{ qq: "1654646369", code: "夜", password: "2734", activated: true },
+{ qq: "3109713612", code: "泷", password: "3845", activated: true },
+{ qq: "3390576154", code: "泷", password: "4956", activated: true },
+{ qq: "1097675149", code: "夜", password: "5067", activated: true },
+{ qq: "1647802618", code: "夜", password: "6178", activated: true },
+{ qq: "2216551698", code: "泷", password: "7289", activated: true },
+{ qq: "3243986695", code: "泷", password: "8390", activated: true },
+{ qq: "2360918083", code: "泷", password: "9401", activated: true },
+{ qq: "2606283193", code: "泷", password: "0512", activated: true },
+{ qq: "2068298272", code: "夜", password: "1623", activated: true },
+{ qq: "3813779902", code: "泷", password: "2734", activated: true },
+{ qq: "2020115344", code: "泷", password: "3845", activated: true },
+{ qq: "652160882", code: "泷", password: "4956", activated: true },
+{ qq: "3795649068", code: "泷", password: "5067", activated: true },
+{ qq: "3995363155", code: "夜", password: "6178", activated: true },
+{ qq: "1927705833", code: "泷", password: "7289", activated: true },
+{ qq: "1543140283", code: "夜", password: "8391", activated: true },
+{ qq: "1691379220", code: "泷", password: "9402", activated: true },
+{ qq: "364990462", code: "夜", password: "0513", activated: true },
+{ qq: "2802644374", code: "泷", password: "1624", activated: true },
+{ qq: "3488616469", code: "夜", password: "2735", activated: true },
+{ qq: "865331813", code: "夜", password: "3846", activated: true },
+{ qq: "2725904226", code: "泷", password: "4957", activated: true },
+{ qq: "2367412632", code: "泷", password: "5068", activated: true },
+{ qq: "943041223", code: "夜", password: "6179", activated: true },
+{ qq: "2147437173", code: "夜", password: "7290", activated: true },
+{ qq: "1148777207", code: "泷", password: "8301", activated: true },
+{ qq: "3083405187", code: "泷", password: "9412", activated: true },
+{ qq: "3054890468", code: "泷", password: "0523", activated: true },
+{ qq: "3673443717", code: "夜", password: "1634", activated: true },
+{ qq: "32356634", code: "泷", password: "2745", activated: true },
+{ qq: "3317332879", code: "泷", password: "3856", activated: true },
+{ qq: "1780211205", code: "夜", password: "4967", activated: true },
+{ qq: "2482621309", code: "泷", password: "5078", activated: true },
+{ qq: "2698248069", code: "泷", password: "6189", activated: true },
+{ qq: "3203894875", code: "夜", password: "7290", activated: true },
+{ qq: "17731242765", code: "泷", password: "8301", activated: true },
+{ qq: "53090228", code: "夜", password: "9412", activated: true },
+{ qq: "2140632623", code: "泷", password: "0523", activated: true },
+{ qq: "3311759596", code: "夜", password: "1634", activated: true },
+{ qq: "3384798809", code: "夜", password: "2745", activated: true },
+{ qq: "2359104725", code: "泷", password: "3856", activated: true },
+{ qq: "2475462703", code: "夜", password: "4967", activated: true },
+{ qq: "1279740751", code: "泷", password: "5078", activated: true },
+{ qq: "2728381463", code: "泷", password: "6189", activated: true },
+{ qq: "3213824126", code: "夜", password: "258481", activated: true },
+{ qq: "1463563408", code: "夜", password: "7291", activated: true },
+{ qq: "984788773", code: "泷", password: "8302", activated: true },
+{ qq: "3468566263", code: "泷", password: "9413", activated: true },
+{ qq: "1875235763", code: "川", password: "0524", activated: true },
+{ qq: "2168183242", code: "介", password: "1635", activated: true },
+{ qq: "3280294327", code: "川", password: "2746", activated: true },
+{ qq: "2480409958", code: "泷", password: "3857", activated: true },
+{ qq: "3752219755", code: "夜", password: "7850", activated: true },
+{ qq: "1114278593", code: "夜", password: "7860", activated: true },
+{ qq: "3860233522", code: "夜", password: "7855", activated: true },
+{ qq: "551473278", code: "夜", password: "8765", activated: true },
+{ qq: "2501313450", code: "川", password: "8775", activated: true },
+{ qq: "2723911959", code: "泷", password: "8675", activated: true },
+{ qq: "2072197990", code: "泷", password: "8765", activated: true },
+{ qq: "3182161791", code: "泷", password: "8775", activated: true },
+{ qq: "3873060748", code: "夜", password: "8775", activated: true },
+{ qq: "1649664203", code: "夜", password: "8775", activated: true },
+{ qq: "3497806997", code: "夜", password: "8775", activated: true },
+{ qq: "1066396295", code: "泷", password: "8775", activated: true },
+{ qq: "1210864486", code: "川", password: "8775", activated: true },
+        ];
+        
+// 黑名单 
+        const blacklist = JSON.parse(localStorage.getItem('blacklist')) || [
+            "学姐0000", "学姐1000", "学姐2000", "学姐3000", "学姐4000"
+        ];
+        
+        // 解封密码
+        const UNBAN_PASSWORD = "JFM2584";
+        // 激活码
+        const ACTIVATION_CODE = "JHM2584";
+        // 查询码
+        const QUERY_PASSWORD = "CXM2584";
+        
+        // DOM元素 
+        const particlesContainer = document.getElementById('particles');
+        const authContainer = document.getElementById('authContainer');
+        const banContainer = document.getElementById('banContainer');
+        const welcomeContainer = document.getElementById('welcomeContainer');
+        const authForm = document.getElementById('authForm');
+        const userCodeInput = document.getElementById('userCode');
+        const passwordGroup = document.getElementById('passwordGroup');
+        const passwordInput = document.getElementById('password');
+        const passwordQueryBtn = document.getElementById('passwordQueryBtn');
+        const qqInput = document.getElementById('qqNumber');
+        const userNameInput = document.getElementById('userName');
+        const statusMessage = document.getElementById('statusMessage');
+        const submitBtn = document.getElementById('submitBtn');
+        const fillBtn = document.getElementById('fillBtn');
+        const unbanIcon = document.getElementById('unbanIcon');
+        const unbanMessage = document.getElementById('unbanMessage');
+        const helpLink = document.getElementById('helpLink');
+        const helpModal = document.getElementById('helpModal');
+        const closeModal = document.getElementById('closeModal');
+        const codeModal = document.getElementById('codeModal');
+        const closeCodeModal = document.getElementById('closeCodeModal');
+        const codeOptions = document.querySelectorAll('.code-option');
+        const confirmCodeBtn = document.getElementById('confirmCodeBtn');
+        const cancelCodeBtn = document.getElementById('cancelCodeBtn');
+        const unbanModal = document.getElementById('unbanModal');
+        const unbanPasswordInput = document.getElementById('unbanPassword');
+        const submitUnbanBtn = document.getElementById('submitUnbanBtn');
+        const cancelUnbanBtn = document.getElementById('cancelUnbanBtn');
+        const unbanStatus = document.getElementById('unbanStatus');
+        const avatarImg = document.getElementById('avatarImg');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userInfo = document.getElementById('userInfo');
+        const timeRemaining = document.getElementById('timeRemaining');
+        const loginStatus = document.getElementById('loginStatus');
+        const registerModal = document.getElementById('registerModal');
+        const closeRegisterModal = document.getElementById('closeRegisterModal');
+        const regQQ = document.getElementById('regQQ');
+        const regName = document.getElementById('regName');
+        const regCode = document.getElementById('regCode');
+        const regPassword = document.getElementById('regPassword');
+        const regConfirmPassword = document.getElementById('regConfirmPassword');
+        const registerForm = document.getElementById('registerForm');
+        const registerStatus = document.getElementById('registerStatus');
+        const cancelRegisterBtn = document.getElementById('cancelRegisterBtn');
+        const activationModal = document.getElementById('activationModal');
+        const closeActivationModal = document.getElementById('closeActivationModal');
+        const activationQQ = document.getElementById('activationQQ');
+        const activationName = document.getElementById('activationName');
+        const activationCode = document.getElementById('activationCode');
+        const activationCodeInput = document.getElementById('activationCodeInput');
+        const submitActivationBtn = document.getElementById('submitActivationBtn');
+        const cancelActivationBtn = document.getElementById('cancelActivationBtn');
+        const activationStatus = document.getElementById('activationStatus');
+        const queryModal = document.getElementById('queryModal');
+        const closeQueryModal = document.getElementById('closeQueryModal');
+        const queryQQ = document.getElementById('queryQQ');
+        const queryCode = document.getElementById('queryCode');
+        const queryName = document.getElementById('queryName');
+        const queryPassword = document.getElementById('queryPassword');
+        const submitQueryBtn = document.getElementById('submitQueryBtn');
+        const cancelQueryBtn = document.getElementById('cancelQueryBtn');
+        const queryStatus = document.getElementById('queryStatus');
+        const queryResult = document.getElementById('queryResult');
+        const resultQQ = document.getElementById('resultQQ');
+        const resultCode = document.getElementById('resultCode');
+        const resultPassword = document.getElementById('resultPassword');
+        const copyBtn = document.getElementById('copyBtn');
+        const activationText = document.getElementById('activationText');
+        const videoModal = document.getElementById('videoModal');
+        const closeVideoModal = document.getElementById('closeVideoModal');
+        const tutorialVideo = document.getElementById('tutorialVideo');
+        const videoHelp = document.getElementById('videoHelp');
  
-  <script>
-    // 初始网站数据（不可删除）
-    const initialWebsites = [
-      { name: 'GitHub', url: 'https://github.com', icon: 'fab fa-github', isInitial: true },
-      { name: '知乎', url: 'https://www.zhihu.com', icon: 'fab fa-zhihu', isInitial: true },
-      { name: 'B站', url: 'https://www.bilibili.com', icon: 'fab fa-bilibili', isInitial: true }
-    ];
+        // 状态变量
+        let failedAttempts = parseInt(localStorage.getItem('failedAttempts')) || 0;
+        let isBanned = localStorage.getItem('isBanned') === 'true';
+        let lastLogin = JSON.parse(localStorage.getItem('lastLogin')) || null;
+        let selectedCode = "";
+        let deviceId = localStorage.getItem('deviceId');
+        let deviceBoundQQ = localStorage.getItem('deviceBoundQQ');
+        let loginExpireTime = 0;
+        let countdownInterval = null;
+        let clickCount = 0;
+        let currentRegisterData = null;
+        let hasShownTutorial = localStorage.getItem('hasShownTutorial') === 'true';
  
-    // 网站数据 
-    let websites = JSON.parse(localStorage.getItem('websites')) || [...initialWebsites];
- 
-    // 主题数据 
-    let theme = JSON.parse(localStorage.getItem('theme')) || {
-      primaryColor: '#7f52af',
-      secondaryColor: '#59299c',
-      bgColor: 'rgba(40, 20, 80, 0.2)',
-      textColor: '#ffffff',
-      cardBg: 'rgba(255, 255, 255, 0.1)',
-      bgImage: 'url(https://s21.ax1x.com/2025/06/13/pVAuU4P.jpg)'
-    };
- 
-    // DOM元素 
-    const dom = {
-      menuButton: document.getElementById('menu-button'),
-      settingsModal: document.getElementById('settings-modal'),
-      closeModal: document.getElementById('close-modal'),
-      bgPreview: document.getElementById('bg-preview'),
-      websitesContainer: document.getElementById('websites-container'),
-      applyTheme: document.getElementById('apply-theme'),
-      resetTheme: document.getElementById('reset-theme'),
-      addWebsite: document.getElementById('add-website'),
-      bgUpload: document.getElementById('bg-upload'),
-      websiteNameInput: document.getElementById('website-name'),
-      websiteUrlInput: document.getElementById('website-url'),
-      customWebsitesList: document.getElementById('custom-websites-list'),
-      searchInput: document.getElementById('search-input'),
-      searchEngines: {
-        baidu: document.getElementById('baidu-search'),
-        google: document.getElementById('google-search'),
-        sogou: document.getElementById('sogou-search'),
-        bing: document.getElementById('bing-search'),
-        sm: document.getElementById('sm-search'),
-        weixin: document.getElementById('weixin-search')
-      }
-    };
- 
-    // 初始化应用 
-    function initApp() {
-      // 应用主题 
-      applyTheme();
- 
-      // 渲染网站卡片 
-      renderWebsites();
- 
-      // 渲染自定义网站列表 
-      renderCustomWebsitesList();
- 
-      // 设置事件监听器 
-      setupEventListeners();
- 
-      // 初始化搜索框事件 
-      setupSearchEvents();
-    }
- 
-    // 应用主题 
-    function applyTheme() {
-      document.documentElement.style.setProperty('--primary-color', theme.primaryColor);
-      document.documentElement.style.setProperty('--secondary-color', theme.secondaryColor);
-      document.documentElement.style.setProperty('--bg-color', theme.bgColor);
-      document.documentElement.style.setProperty('--text-color', theme.textColor);
-      document.documentElement.style.setProperty('--card-bg', theme.cardBg);
- 
-      // 设置背景图片 
-      document.body.style.backgroundImage = `linear-gradient(135deg, ${theme.bgColor}, rgba(25, 25, 60, 0.3)), ${theme.bgImage}`;
-      dom.bgPreview.style.backgroundImage = theme.bgImage;
- 
-      // 更新颜色选择器 
-      document.getElementById('primary-color').value = theme.primaryColor;
-      document.getElementById('secondary-color').value = theme.secondaryColor;
-      document.getElementById('bg-color').value = rgbToHex(theme.bgColor);
-      document.getElementById('text-color').value = theme.textColor;
-      document.getElementById('card-bg').value = theme.cardBg;
-    }
- 
-    // RGB(A)转HEX 
-    function rgbToHex(rgb) {
-      if (rgb.startsWith('#')) return rgb;
- 
-      const parts = rgb.match(/^rgba?$$(\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))?$$$/);
-      if (!parts) return '#ffffff';
- 
-      const r = parseInt(parts[1]);
-      const g = parseInt(parts[2]);
-      const b = parseInt(parts[3]);
- 
-      return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-    }
- 
-    // 渲染网站卡片 
-    function renderWebsites() {
-      dom.websitesContainer.innerHTML = '';
- 
-      websites.forEach((website) => {
-        const card = document.createElement('div');
-        card.className = 'website-card';
-        card.innerHTML = `
-          <div class="website-icon"><i class="${website.icon}"></i></div>
-          <div class="website-name">${website.name}</div>
-        `;
- 
-        card.addEventListener('click', () => {
-          window.open(website.url, '_blank');
-        });
- 
-        dom.websitesContainer.appendChild(card);
-      });
-    }
- 
-    // 渲染自定义网站列表 
-    function renderCustomWebsitesList() {
-      dom.customWebsitesList.innerHTML = '';
- 
-      const customWebsites = websites.filter(website => !website.isInitial);
- 
-      if (customWebsites.length === 0) {
-        dom.customWebsitesList.innerHTML = '<p style="text-align: center; color: #ccc;">暂无自定义网站</p>';
-        return;
-      }
- 
-      customWebsites.forEach((website, index) => {
-        const item = document.createElement('div');
-        item.className = 'website-item';
-        item.innerHTML = `
-          <div class="website-item-info">
-            <div class="website-item-icon"><i class="${website.icon}"></i></div>
-            <div>${website.name}</div>
-          </div>
-          <button class="delete-website-btn" data-index="${index}">删除</button>
-        `;
- 
-        dom.customWebsitesList.appendChild(item);
-      });
- 
-      // 添加删除按钮事件监听 
-      document.querySelectorAll('.delete-website-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const index = parseInt(btn.dataset.index);
-          deleteCustomWebsite(index);
-        });
-      });
-    }
- 
-    // 删除自定义网站 
-    function deleteCustomWebsite(index) {
-      // 找到自定义网站的索引（跳过初始网站）
-      const customWebsites = websites.filter(website => !website.isInitial);
-      if (index >= 0 && index < customWebsites.length) {
-        const websiteName = customWebsites[index].name;
-        if (confirm(`确定要删除网站 "${websiteName}" 吗？`)) {
-          // 找到在原始数组中的索引 
-          const originalIndex = websites.findIndex(w => 
-            !w.isInitial && w.name === customWebsites[index].name && w.url === customWebsites[index].url 
-          );
-          
-          if (originalIndex !== -1) {
-            websites.splice(originalIndex, 1);
-            localStorage.setItem('websites', JSON.stringify(websites));
-            renderWebsites();
-            renderCustomWebsitesList();
-          }
+        // 初始化页面 
+        function init() {
+            // 生成设备ID 
+            if (!deviceId) {
+                deviceId = 'dev_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+                localStorage.setItem('deviceId', deviceId);
+            }
+            
+            // 设置头像 
+            avatarImg.src = "https://s21.ax1x.com/2025/06/23/pVZxP3R.jpg";
+            
+            createParticles();
+            checkBannedStatus();
+            checkSessionStatus();
+            setupEventListeners();
+            
+            // 首次打开显示教程视频
+            if (!hasShownTutorial) {
+                setTimeout(() => {
+                    videoModal.style.display = 'flex';
+                    tutorialVideo.play();
+                    localStorage.setItem('hasShownTutorial', 'true');
+                }, 1000);
+            }
         }
-      }
-    }
  
-    // 设置事件监听器 
-    function setupEventListeners() {
-      // 打开模态框 
-      dom.menuButton.addEventListener('click', () => {
-        dom.settingsModal.style.display = 'block';
-        document.body.style.overflow = 'hidden'; // 防止背景滚动 
-      });
- 
-      // 关闭模态框 
-      dom.closeModal.addEventListener('click', () => {
-        dom.settingsModal.style.display = 'none';
-        document.body.style.overflow = ''; // 恢复背景滚动 
-      });
- 
-      // 点击模态框外部关闭 
-      dom.settingsModal.addEventListener('click', (e) => {
-        if (e.target === dom.settingsModal) {
-          dom.settingsModal.style.display = 'none';
-          document.body.style.overflow = ''; // 恢复背景滚动 
-        }
-      });
- 
-      // 标签页切换 
-      document.querySelectorAll('.modal-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
-          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
- 
-          tab.classList.add('active');
-          document.getElementById(`${tab.dataset.tab}-tab`).classList.add('active');
-        });
-      });
- 
-      // 应用主题 
-      dom.applyTheme.addEventListener('click', () => {
-        theme.primaryColor = document.getElementById('primary-color').value;
-        theme.secondaryColor = document.getElementById('secondary-color').value;
-        theme.bgColor = hexToRgb(document.getElementById('bg-color').value, 0.2);
-        theme.textColor = document.getElementById('text-color').value;
-        theme.cardBg = hexToRgb(document.getElementById('card-bg').value, 0.1);
- 
-        localStorage.setItem('theme', JSON.stringify(theme));
-        applyTheme();
-        dom.settingsModal.style.display = 'none';
-        document.body.style.overflow = ''; // 恢复背景滚动 
-      });
- 
-      // HEX转RGB(A)
-      功能 hexToRgb(hex, alpha) {
-        Const r = parseInt(hex.slice(1, 3), 16);
-        const g = parseInt(hex.slice(3, 5), 16);
-        const b = parseInt(hex.slice(5, 7), 16);
- 
-        返回 alpha ? `rgba(${r}, ${g}, ${b}, ${alpha})` : `rgb(${r}, ${g}, ${b})`;
-      }
- 
-      // 重置主题 
-      dom.resetTheme.addEventListener('单击', ()=>{
-        主题 = {
-          primaryColor: '#7f52af',
-          secondaryColor: '#59299c',
-          bgcolor: 'rgba(40, 20, 80, 0.2)',
-          textColor: '#ffffff',
-          cardBg: 'rgba(255, 255, 255, 0.1)',
-          bgImage: 'url(https://s21.ax1x.com/2025/06/13/pVAuU4P.jpg)'
-        };
- 
-        localStorage.setitem('主题', JSON.使字符串化(theme));
-        applyTheme();
-      });
- 
-      // 添加网站
-      Dom.addWebsite.addEventListener('click', ()=>{
-        Const姓名 = Dom.websiteNameInput.value.trim();
-        Consturl = Dom.webiteUrlInput.value.trim();
-        Const图标 = 文件.getElementById('网站图标').value;
- 
-        如果 (!姓名 || !url) {
-          警惕的('请输入网站名称和URL');
-          返回;
+        // 创建背景粒子 
+        function createParticles() {
+            const particleCount = 20;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('bg-particle');
+                
+                const size = Math.random() * 25 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                particle.style.left = `${Math.random() * 100}%`;
+                
+                const delay = Math.random() * 15;
+                const duration = Math.random() * 10 + 15;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
         }
  
-        //检查URL是否有效
-        如果 (!isValidUrl(URL)) {
-          警惕的('请输入有效的URL，例如：https://example.com');
-          返回;
+        // 检查账号是否被封禁
+        function checkBannedStatus() {
+            if (isBanned) {
+                authContainer.style.display = 'none';
+                banContainer.style.display = 'block';
+                // 播放封禁音效
+                playSound('fjyx.mp3');
+            } else {
+                authContainer.style.display = 'block';
+                banContainer.style.display = 'none';
+            }
         }
  
-        ConstnewWebsite={
-          姓名,
-          URL: URL.包括('://') ? URL : 'https://${URL}`,
-          图标,
-          isInitial: 假的 
-        };
- 
-        网站.推(newWebsite);
-        localStorage.setitem('网站', JSON.使字符串化(网站));
-        renderWebsites();
-        renderCustomWebsitesList();
- 
-        // 重置表单
-        Dom.websiteNameInput.价值='';
-        Dom.webiteUrlInput.价值='';
-        文件.getElementById('网站图标').价值='fas fa-globe';
-      });
- 
-      // 上传背景图片
-      Dom.bgUpload.addEventListener('更改', 功能 (e) {
-        Const文件=e.目标.文件[0];
-        如果 (!文件) 返回;
- 
-        如果 (!文件.类型.匹配('图像。*')) {
-          警惕的('请选择图片文件');
-          返回;
+        // 检查会话状态 
+        function checkSessionStatus() {
+            if (isBanned) return;
+            
+            const sessionActive = sessionStorage.getItem('sessionActive') === 'true';
+            const sessionExpire = parseInt(sessionStorage.getItem('sessionExpire'));
+            
+            if (sessionActive && sessionExpire) {
+                const currentTime = new Date().getTime();
+                if (currentTime < sessionExpire) {
+                    showWelcomePage();
+                    return;
+                }
+            }
+            
+            const rememberMe = localStorage.getItem('rememberMe') === 'true';
+            const lastLogin = JSON.parse(localStorage.getItem('lastLogin')) || null;
+            const lastLoginTime = parseInt(localStorage.getItem('lastLoginTime'));
+            
+            if (rememberMe && lastLogin && lastLoginTime) {
+                const twentyFourHours = 24 * 60 * 60 * 1000;
+                const currentTime = new Date().getTime();
+                
+                if (currentTime - lastLoginTime < twentyFourHours) {
+                    sessionStorage.setItem('sessionActive', 'true');
+                    sessionStorage.setItem('sessionExpire', (lastLoginTime + twentyFourHours).toString());
+                    showWelcomePage();
+                } else {
+                    localStorage.removeItem('rememberMe');
+                    localStorage.removeItem('lastLogin');
+                    localStorage.removeItem('lastLoginTime');
+                }
+            }
         }
  
-        Const读者=新的FileReader();
-        读者.onload=功能 (e) {
-          ConstimageUrl=e.目标.结果;
-          Dom.bgPreview.风格.BackgroundImage='URL(${imageUrl})'；
-          主题.bgImage='URL(${imageUrl})'；
-          localStorage.setitem('主题', JSON.使字符串化(主题));
-          文件.身体.风格.BackgroundImage=线性梯度(135度，${主题.bgcolor}，rgba(25，25，60，0.3))，${主题.bgImage}`;
-        };
-读者.readAsDataURL(文件)；
-      });
-    }
- 
-// 设置搜索框事件
-功能setupSearchEvents(){
-// 输入时更新搜索链接
-Dom.searchInput.addEventListener('输入'，功能(){
-Const查询=encode URIComponent(这.价值)；
-对象.值(Dom.searchEngines).forEach(引擎=>{
-常数baseUrl=引擎.href.分离('=')[0]；
-引擎.href=baseUrl+'='+查询；
-        });
-      });
- 
-// 回车键搜索
-Dom.searchInput.addEventListener('按键'，功能(e){
-如果(e.钥匙==='输入'){
-搜索();
+        // 显示欢迎页面 
+        function showWelcomePage() {
+            authContainer.style.display = 'none';
+            welcomeContainer.style.display = 'block';
+            
+            const lastLogin = JSON.parse(localStorage.getItem('lastLogin')) || {};
+            const loginTime = parseInt(localStorage.getItem('lastLoginTime'));
+            const expireTime = loginTime + (24 * 60 * 60 * 1000);
+            
+            userInfo.innerHTML = `
+                <div class="user-info-item">
+                    <span>QQ号码:</span>
+                    <span>${lastLogin.qq || '未知'}</span>
+                </div>
+                <div class="user-info-item">
+                    <span>用户昵称:</span>
+                    <span>${lastLogin.name || '未知'}</span>
+                </div>
+                <div class="user-info-item">
+                    <span>注册代号:</span>
+                    <span>${lastLogin.code || '未知'}</span>
+                </div>
+                <div class="user-info-item">
+                    <span>登录设备:</span>
+                    <span>${deviceId || '未知'}</span>
+                </div>
+            `;
+            
+            startCountdown(expireTime);
         }
-      });
-    }
  
-//验证URL//验证URL
-函数isValidUrl(字符串){函数isValidUrl(字符串){
-尝试{try{
-新建URL(字符串)；新建URL(字符串)；
-返回true；传回true；
-}catch(_){}catch(_){
-返回false；返回false；
-      }
-    }
+        // 启动倒计时
+        function startCountdown(expireTime) {
+            loginExpireTime = expireTime;
+            
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            
+            countdownInterval = setInterval(() => {
+                const currentTime = new Date().getTime();
+                const timeLeft = expireTime - currentTime;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    timeRemaining.textContent = "已过期";
+                    loginStatus.textContent = "登录已过期";
+                    logout();
+                    return;
+                }
+                
+                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                
+                timeRemaining.textContent = `${hours}小时${minutes}分${seconds}秒`;
+            }, 1000);
+        }
  
-// 简单搜索函数// 简单搜索函数
-函数搜索(){函数搜索(){
-const输入=dom.searchInput.value；const输入=dom。searchInput。价值；
-if(输入){
-'https://www.baidu.com/s?wd=${encodeURIComponent(input)}'${encodeURIComponent(输入)}'，'_blank')；window.open('HTTPS://www.百度。com/s？WD=${encodeURIComponent(输入)}'，'_空白的')；
-      }
-    }
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 播放点击音效
+            document.querySelectorAll('button, input, a').forEach(element => {
+                element.addEventListener('click', () => playSound('anyx.mp3'));
+            });
+            
+            // 输入框点击音效
+            document.querySelectorAll('input, textarea, select').forEach(element => {
+                element.addEventListener('focus', () => playSound('srkyx.mp3'));
+            });
+            
+            // 注册代号输入框点击事件
+            userCodeInput.addEventListener('click', function() {
+                codeModal.style.display = 'flex';
+            });
+            
+            // 代号选择事件
+            codeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    codeOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedCode = this.dataset.code;
+                });
+            });
+            
+            // 确认代号选择
+            confirmCodeBtn.addEventListener('click', function() {
+                if (selectedCode) {
+                    userCodeInput.value = selectedCode;
+                    codeModal.style.display = 'none';
+                    
+                    if (selectedCode === "泷" || selectedCode === "夜" || selectedCode === "介" || selectedCode === "川") {
+                        passwordGroup.style.display = 'block';
+                        passwordInput.required = true;
+                    } else {
+                        passwordGroup.style.display = 'none';
+                        passwordInput.required = false;
+                    }
+                } else {
+                    showStatusMessage("请选择一个注册代号", "error");
+                }
+            });
+            
+            // 取消代号选择 
+            cancelCodeBtn.addEventListener('click', function() {
+                codeModal.style.display = 'none';
+            });
+            
+            // 关闭代号模态框 
+            closeCodeModal.addEventListener('click', function() {
+                codeModal.style.display = 'none';
+            });
+            
+            // 表单提交事件 
+            authForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                authenticateUser();
+            });
+            
+            // 一键填写按钮 
+            fillBtn.addEventListener('click', function() {
+                if (lastLogin) {
+                    qqInput.value = lastLogin.qq;
+                    userNameInput.value = lastLogin.name || "";
+                    userCodeInput.value = lastLogin.code;
+                    selectedCode = lastLogin.code;
+                    
+                    if (lastLogin.code === "泷" || lastLogin.code === "夜" || lastLogin.code === "介" || lastLogin.code === "川") {
+                        passwordGroup.style.display = 'block';
+                        passwordInput.value = lastLogin.password || "";
+                    }
+                    
+                    showStatusMessage("已自动填充上次登录信息", "warning");
+                } else {
+                    showStatusMessage("没有找到上次登录信息", "error");
+                }
+            });
+            
+            // 解封图标点击事件 
+            unbanIcon.addEventListener('click', function() {
+                clickCount++;
+                
+                if (clickCount < 7) {
+                    this.innerHTML = `<i class="fas fa-Silong"></i> ${7 - clickCount}`;
+                    this.style.transform = "scale(1.1)";
+                    setTimeout(() => {
+                        this.style.transform = "scale(1)";
+                    }, 200);
+                } else {
+                    unbanModal.style.display = 'flex';
+                }
+            });
+            
+            // 提交解封请求 
+            submitUnbanBtn.addEventListener('click', function() {
+                const password = unbanPasswordInput.value.trim();
+                
+                if (password === UNBAN_PASSWORD) {
+                    unbanAccount();
+                } else {
+                    unbanStatus.textContent = "解封密码错误，请重试";
+                    unbanStatus.className = "status-message error-message";
+                    unbanStatus.style.display = 'block';
+                }
+            });
+            
+            // 取消解封
+            cancelUnbanBtn.addEventListener('click', function() {
+                unbanModal.style.display = 'none';
+                unbanPasswordInput.value = "";
+                unbanStatus.style.display = 'none';
+            });
+            
+            // 帮助链接 
+            helpLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                helpModal.style.display = 'flex';
+            });
+            
+            // 关闭模态框 
+            closeModal.addEventListener('click', function() {
+                helpModal.style.display = 'none';
+            });
+            
+            // 视频教程链接
+            videoHelp.addEventListener('click', function(e) {
+                e.preventDefault();
+                videoModal.style.display = 'flex';
+                tutorialVideo.play();
+            });
+            
+            // 关闭视频模态框
+            closeVideoModal.addEventListener('click', function() {
+                videoModal.style.display = 'none';
+                tutorialVideo.pause();
+            });
+            
+            // 退出登录按钮 
+            logoutBtn.addEventListener('click', function() {
+                logout();
+            });
+            
+            // 取消注册 
+            cancelRegisterBtn.addEventListener('click', function() {
+                registerModal.style.display = 'none';
+            });
+            
+            // 注册表单提交 
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                registerUser();
+            });
+            
+            // 关闭注册模态框 
+            closeRegisterModal.addEventListener('click', function() {
+                registerModal.style.display = 'none';
+            });
+            
+            // 提交激活码 
+            submitActivationBtn.addEventListener('click', function() {
+                activateAccount();
+            });
+            
+            // 取消激活 
+            cancelActivationBtn.addEventListener('click', function() {
+                activationModal.style.display = 'none';
+            });
+            
+            // 关闭激活模态框 
+            closeActivationModal.addEventListener('click', function() {
+                activationModal.style.display = 'none';
+            });
+            
+            // 密码查询按钮 
+            passwordQueryBtn.addEventListener('click', function() {
+                queryModal.style.display = 'flex';
+                queryStatus.style.display = 'none';
+                queryResult.style.display = 'none';
+            });
+            
+            // 关闭查询模态框 
+            closeQueryModal.addEventListener('click', function() {
+                queryModal.style.display = 'none';
+            });
+            
+            // 取消查询
+            cancelQueryBtn.addEventListener('click', function() {
+                queryModal.style.display = 'none';
+            });
+            
+            // 提交查询请求
+            submitQueryBtn.addEventListener('click', function() {
+                const qq = queryQQ.value.trim();
+                const code = queryCode.value.trim();
+                const name = queryName.value.trim();
+                const password = queryPassword.value.trim();
+                
+                if (!qq || !code || !password) {
+                    queryStatus.textContent = "请填写所有必填项";
+                    queryStatus.className = "status-message error-message";
+                    queryStatus.style.display = 'block';
+                    return;
+                }
+                
+                if (password !== QUERY_PASSWORD) {
+                    queryStatus.textContent = "查询密码错误，请重试";
+                    queryStatus.className = "status-message error-message";
+                    queryStatus.style.display = 'block';
+                    return;
+                }
+                
+                // 在授权用户和本地存储用户中查找
+                let user = authorizedUsers.find(u => u.qq === qq && u.code === code);
+                if (!user) {
+                    const localUsers = JSON.parse(localStorage.getItem('localUsers')) || [];
+                    user = localUsers.find(u => u.qq === qq && u.code === code);
+                }
+                
+                if (!user) {
+                    queryStatus.textContent = "未找到匹配的账号信息";
+                    queryStatus.className = "status-message error-message";
+                    queryStatus.style.display = 'block';
+                    return;
+                }
+                
+                // 显示查询结果 
+                resultQQ.textContent = qq;
+                resultCode.textContent = code;
+                resultPassword.textContent = user.password;
+                
+                queryStatus.style.display = 'none';
+                queryResult.style.display = 'block';
+            });
+            
+            // 复制按钮功能 
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function() {
+                    const textToCopy = activationText.textContent;
+                    
+                    // 创建一个临时textarea元素来复制文本 
+                    const textarea = document.createElement('textarea');
+                    textarea.value = textToCopy;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    
+                    // 显示复制成功的提示
+                    const originalHtml = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i> 已复制';
+                    
+                    // 2秒后恢复原状 
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalHtml;
+                    }, 2000);
+                });
+            }
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', function(e) {
+                if (e.target === helpModal) helpModal.style.display = 'none';
+                if (e.target === codeModal) codeModal.style.display = 'none';
+                if (e.target === unbanModal) unbanModal.style.display = 'none';
+                if (e.target === registerModal) registerModal.style.display = 'none';
+                if (e.target === activationModal) activationModal.style.display = 'none';
+                if (e.target === queryModal) queryModal.style.display = 'none';
+                if (e.target === videoModal) {
+                    videoModal.style.display = 'none';
+                    tutorialVideo.pause();
+                }
+            });
+        }
  
-// 页面加载时初始化// 页面加载时初始化
-文件.addEventListener('DOMContentLoaded'，initApp)文件。addEventListener('DOMContentLoaded'，initApp)；
-</脚本>
-</身体>
+        // 用户注册
+        function authenticateUser() {
+            const qq = qqInput.value.trim();
+            const name = userNameInput.value.trim();
+            const code = selectedCode;
+            const password = passwordInput.value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            
+            // QQ号格式验证
+            if (!qq || qq.length < 5 || qq.length > 10 || isNaN(qq)) {
+                showStatusMessage("QQ号必须是5-10位数字", "error");
+                return;
+            }
+            
+            if (!name) {
+                showStatusMessage("请填写用户昵称", "error");
+                return;
+            }
+            
+            if (!code) {
+                showStatusMessage("请选择注册代号", "error");
+                return;
+            }
+            
+            // 检查是否在黑名单中 
+            if (blacklist.includes(qq)) {
+                showStatusMessage("该账号已被拉入黑名单，无法登录", "error");
+                return;
+            }
+            
+            if (deviceBoundQQ && deviceBoundQQ !== qq) {
+                showStatusMessage("该设备已绑定其他账号，禁止登录", "error");
+                banAccount(qq);
+                return;
+            }
+            
+            submitBtn.innerHTML = '<span class="loading"></span> 验证中...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                // 在授权用户和本地存储用户中查找 
+                let user = null;
+                
+                // 在授权用户中查找 
+                user = authorizedUsers.find(u => u.qq === qq);
+                
+                // 在本地存储用户中查找 
+                if (!user) {
+                    const localUsers = JSON.parse(localStorage.getItem('localUsers')) || [];
+                    user = localUsers.find(u => u.qq === qq);
+                }
+                
+                if (!user) {
+                    // 未注册用户，弹出注册框 
+                    showRegisterModal(qq, name, code);
+                    submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> 账号注册';
+                    submitBtn.disabled = false;
+                    return;
+                }
+                
+                // 检查账号是否匹配
+                if (user.code !== code) {
+                    handleFailedAttempt("该账号已注册，可点击搜索按钮查询代号", qq);
+                    return;
+                }
+                
+                if (user.password && user.password !== password) {
+                    handleFailedAttempt("该账号已注册，可点击搜索按钮查询密码");
+                    return;
+                }
+                
+                // 检查账号是否已激活 
+                if (!user.activated) {
+                    showActivationModal(user.qq, user.name, user.code);
+                    submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> 账号注册';
+                    submitBtn.disabled = false;
+                    return;
+                }
+                
+                handleSuccess(user, name, rememberMe);
+            }, 1000);
+        }
  
-</超文本标记语言>
+        // 显示注册模态框 
+        function showRegisterModal(qq, name, code) {
+            regQQ.value = qq;
+            regName.value = name;
+            regCode.value = code;
+            registerStatus.style.display = 'none';
+            registerModal.style.display = 'flex';
+            
+            // 保存当前注册数据 
+            currentRegisterData = { qq, name, code };
+        }
+ 
+        // 注册用户
+        function registerUser() {
+            const password = regPassword.value;
+            const confirmPassword = regConfirmPassword.value;
+            
+            if (!password) {
+                registerStatus.textContent = "请设置密码";
+                registerStatus.className = "status-message error-message";
+                registerStatus.style.display = 'block';
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                registerStatus.textContent = "两次输入的密码不一致";
+                registerStatus.className = "status-message error-message";
+                registerStatus.style.display = 'block';
+                return;
+            }
+            
+            // 检查是否在黑名单中 
+            if (blacklist.includes(currentRegisterData.qq)) {
+                registerStatus.textContent = "该账号已被拉入黑名单，无法注册";
+                registerStatus.className = "status-message error-message";
+                registerStatus.style.display = 'block';
+                return;
+            }
+            
+            // 创建新用户 
+            const newUser = {
+                qq: currentRegisterData.qq,
+                name: currentRegisterData.name,
+                code: currentRegisterData.code,
+                password: password,
+                activated: false 
+            };
+            
+            // 保存到本地存储 
+            let localUsers = JSON.parse(localStorage.getItem('localUsers')) || [];
+            localUsers.push(newUser);
+            localStorage.setItem('localUsers', JSON.stringify(localUsers));
+            
+            // 添加到授权用户列表（临时）
+            authorizedUsers.push(newUser);
+            
+            registerStatus.textContent = "注册成功！请激活账号";
+            registerStatus.className = "status-message success-message";
+            registerStatus.style.display = 'block';
+            
+            setTimeout(() => {
+                registerModal.style.display = 'none';
+                showActivationModal(newUser.qq, newUser.name, newUser.code);
+            }, 1500);
+        }
+ 
+        // 显示激活模态框 
+        function showActivationModal(qq, name, code) {
+            activationQQ.textContent = qq;
+            activationName.textContent = name;
+            activationCode.textContent = code;
+            activationStatus.style.display = 'none';
+            activationModal.style.display = 'flex';
+        }
+ 
+        // 激活账号
+        function activateAccount() {
+            const code = activationCodeInput.value.trim();
+            
+            if (code !== ACTIVATION_CODE) {
+                activationStatus.textContent = "激活码错误，请重试";
+                activationStatus.className = "status-message error-message";
+                activationStatus.style.display = 'block';
+                return;
+            }
+            
+            // 更新账号激活状态 
+            const qq = activationQQ.textContent;
+            let localUsers = JSON.parse(localStorage.getItem('localUsers')) || [];
+            
+            const userIndex = localUsers.findIndex(u => u.qq === qq);
+            if (userIndex !== -1) {
+                localUsers[userIndex].activated = true;
+                localStorage.setItem('localUsers', JSON.stringify(localUsers));
+                
+                // 更新授权用户列表 
+                const authUserIndex = authorizedUsers.findIndex(u => u.qq === qq);
+                if (authUserIndex !== -1) {
+                    authorizedUsers[authUserIndex].activated = true;
+                }
+                
+                activationStatus.textContent = "账号激活成功！";
+                activationStatus.className = "status-message success-message";
+                activationStatus.style.display = 'block';
+                
+                // 自动登录 
+                setTimeout(() => {
+                    activationModal.style.display = 'none';
+                    
+                    const user = authorizedUsers.find(u => u.qq === qq);
+                    if (user) {
+                        handleSuccess(user, user.name, true);
+                    }
+                }, 1500);
+            } else {
+                activationStatus.textContent = "账号不存在";
+                activationStatus.className = "status-message error-message";
+                activationStatus.style.display = 'block';
+            }
+        }
+ 
+        // 处理注册成功 
+        function handleSuccess(user, name, rememberMe) {
+            failedAttempts = 0;
+            localStorage.setItem('failedAttempts', failedAttempts);
+            
+            lastLogin = {
+                qq: user.qq,
+                name: name,
+                code: user.code,
+                password: user.password 
+            };
+            
+            const currentTime = new Date().getTime();
+            const expireTime = currentTime + (24 * 60 * 60 * 1000);
+            
+            if (rememberMe) {
+                localStorage.setItem('rememberMe', 'true');
+                localStorage.setItem('lastLogin', JSON.stringify(lastLogin));
+                localStorage.setItem('lastLoginTime', currentTime.toString());
+            }
+            
+            sessionStorage.setItem('sessionActive', 'true');
+            sessionStorage.setItem('sessionExpire', expireTime.toString());
+            localStorage.setItem('deviceBoundQQ', user.qq);
+            
+            showStatusMessage(`登录成功！欢迎回来 ${name}`, "success");
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> 登录成功';
+            
+            setTimeout(() => {
+                showWelcomePage();
+            }, 2000);
+        }
+ 
+        // 处理注册失败 
+        function handleFailedAttempt(message, qq) {
+            failedAttempts++;
+            localStorage.setItem('failedAttempts', failedAttempts);
+            
+            showStatusMessage(`${message}，失败次数: ${failedAttempts}/5`, "error");
+            submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> 注册账号';
+            submitBtn.disabled = false;
+            
+            if (failedAttempts >= 5) {
+                banAccount(qq);
+            }
+        }
+ 
+        // 封禁账号
+        function banAccount(qq) {
+            isBanned = true;
+            localStorage.setItem('isBanned', 'true');
+            localStorage.setItem('bannedQQ', qq);
+            authContainer.style.display = 'none';
+            banContainer.style.display = 'block';
+            // 播放封禁音效
+            playSound('fjyx.mp3');
+        }
+ 
+        // 解封账号 
+        function unbanAccount() {
+            unbanMessage.style.display = 'block';
+            unbanMessage.textContent = "宝子你继续🤗";
+            unbanMessage.className = "status-message warning-message";
+            
+            setTimeout(() => {
+                isBanned = false;
+                failedAttempts = 0;
+                localStorage.setItem('isBanned', 'false');
+                localStorage.setItem('failedAttempts', '0');
+                localStorage.removeItem('deviceBoundQQ');
+                
+                authContainer.style.display = 'block';
+                banContainer.style.display = 'none';
+                unbanModal.style.display = 'none';
+                unbanIcon.innerHTML = '<i class="fas fa-Silong"></i>';
+                
+                showStatusMessage("账号已成功解封，请重新登录", "success");
+            }, 1500);
+        }
+ 
+        // 退出登录
+        function logout() {
+            sessionStorage.removeItem('sessionActive');
+            sessionStorage.removeItem('sessionExpire');
+            
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            
+            welcomeContainer.style.display = 'none';
+            authContainer.style.display = 'block';
+            showStatusMessage("您已成功退出登录", "success");
+        }
+ 
+        // 显示状态消息 
+        function showStatusMessage(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message ${type}-message`;
+            statusMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 10000);
+        }
+        
+        // 播放音效
+        function playSound(soundFile) {
+            const audio = new Audio(soundFile);
+            audio.play().catch(e => console.log("音效播放失败:", e));
+        }
+      
+
+        // 初始化页面 
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
