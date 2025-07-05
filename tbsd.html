@@ -1039,6 +1039,40 @@
             align-items: center;
             gap: 20px;
         }
+        
+        .used-codes {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 8px;
+            border: 1px solid var(--gold);
+        }
+        
+        .used-codes-title {
+            color: var(--gold);
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .used-codes-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .code-badge {
+            padding: 4px 10px;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 15px;
+            color: var(--gold);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
     </style>
 </head>
 <body>
@@ -1105,9 +1139,15 @@
                     </button>
                 </form>
                 <div class="redeem-info">
-                    <p><i class="fas fa-info-circle"></i> 兑换码可以通过参与活动或购买获得</p>
-                    <p><i class="fas fa-lightbulb"></i> 每个兑换码可兑换50钻石，有效期30天</p>
-                    <p><i class="fas fa-exclamation-triangle"></i> 每个设备仅限兑换一次</p>
+                    <p><i class="fas fa-info-circle"></i> 支付29.99元后即可进入会员群</p>
+                    <p><i class="fas fa-lightbulb"></i> 可在会员群@Q群管家获取兑换码，有效期30天</p>
+                    <p><i class="fas fa-exclamation-triangle"></i> 每个兑换码仅限使用一次</p>
+                </div>
+                <div class="used-codes">
+                    <h3 class="used-codes-title"><i class="fas fa-history"></i> 已使用兑换码</h3>
+                    <div class="used-codes-list" id="usedCodesList">
+                        <!-- 已使用兑换码将动态显示 -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -1146,7 +1186,7 @@
             </div>
             
             <!-- 右侧：兑换按钮 -->
-          <div class="top-bar-center">
+            <div class="top-bar-center">
                 <button class="redeem-btn" id="redeemBtn">
                     <i class="fas fa-gift"></i>
                     兑换钻石
@@ -1180,7 +1220,7 @@
                 <button class="category-btn" data-category="july">
                     <i class="fas fa-fire"></i>
                     7月图包
-                       </button>
+                </button>
                 <button class="category-btn" data-category="premium">
                     <i class="fas fa-fire"></i>
                     往期图包
@@ -1231,7 +1271,7 @@
                 <!-- 新商品1 -->
                 <div class="product-card" data-category="premium" data-name="稀有图包" data-desc="？？？">
                     <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-158047766。7995-2b94f01c9516?q=80&w=800" alt="往期图包">
+                        <img src="https://images.unsplash.com/photo-1580477667995-2b94f01c9516?q=80&w=800" alt="往期图包">
                         <span class="product-tag">往期图包</span>
                         <div class="product-price gold-price">
                             <i class="fas fa-coins"></i>
@@ -1251,7 +1291,7 @@
                 <!-- 新商品2 -->
                 <div class="product-card" data-category="premium" data-name="往期图包" data-desc="？？？">
                     <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-15933058。41991-05c297ba4575?q=80&w=800" alt="往期图包">
+                        <img src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?q=80&w=800" alt="往期图包">
                         <span class="product-tag">往期图包</span>
                         <div class="product-price gold-price">
                             <i class="fas fa-coins"></i>
@@ -1343,8 +1383,8 @@
                 name: "往期图包", 
                 category: "premium", 
                 desc: "？？？",
-                imageUrl: "https://images.unsplash.com/photo-1580477667995-2b94f01c。9516?q=80&w=800",
-                detailImageUrl: "https://images.unsplash.com/photo-1580477。667995-2b94f01c9516?q=80&w=800",
+                imageUrl: "https://images.unsplash.com/photo-158047。7667995-2b94f01c9516?q=80&w=800",
+                detailImageUrl: "https://images.unsplash.com/photo-15804。77667995-2b94f01c9516?q=80&w=800",
                 price: 20,
                 currency: "gold",
                 downloadOptions: [
@@ -1373,8 +1413,8 @@
                 name: "往期图包", 
                 category: "premium", 
                 desc: "？？？",
-                imageUrl: "https://images.unspla。sh.com/photo-1593305841991-05c297ba4575?q=80&w=800",
-                detailImageUrl: "https://images.unsplash.co。m/photo-1593305841991-05c297ba4575?q=80&w=800",
+                imageUrl: "https://images.unsplash.com/photo-159330584。1991-05c297ba4575?q=80&w=800",
+                detailImageUrl: "https://images.unsplash.com/photo-15。93305841991-05c297ba4575?q=80&w=800",
                 price: 20,
                 currency: "gold",
                 downloadOptions: [
@@ -1400,6 +1440,15 @@
             }
         ];
         
+        // 有效兑换码及其钻石值
+        const validCodes = {
+            "silong3396": 50,
+            "silong2584": 40,
+            "diamond50": 50,
+            "premium30": 30,
+            "special20": 20
+        };
+        
         // DOM元素
         const modal = document.getElementById('productModal');
         const closeModalBtn = document.getElementById('closeModal');
@@ -1414,23 +1463,23 @@
         const redeemBtn = document.getElementById('redeemBtn');
         const signinBtn = document.getElementById('signinBtn');
         const redeemForm = document.getElementById('redeemForm');
+        const usedCodesList = document.getElementById('usedCodesList');
         
         // 用户状态
         let userGold = localStorage.getItem('userGold');
         let userDiamonds = localStorage.getItem('userDiamonds');
         let unlockedProducts = JSON.parse(localStorage.getItem('unlockedProducts')) || [];
-        let redeemed = localStorage.getItem('redeemed') === 'true';
         let usedCodes = JSON.parse(localStorage.getItem('usedCodes')) || [];
         
         if (userGold === null) {
-            userGold = 0; // 初始金币
+            userGold = 100; // 初始金币
             localStorage.setItem('userGold', userGold);
         } else {
             userGold = parseInt(userGold);
         }
         
         if (userDiamonds === null) {
-            userDiamonds = 0; // 初始钻石
+            userDiamonds = 100; // 初始钻石
             localStorage.setItem('userDiamonds', userDiamonds);
         } else {
             userDiamonds = parseInt(userDiamonds);
@@ -1438,13 +1487,6 @@
         
         goldAmount.textContent = userGold;
         diamondAmount.textContent = userDiamonds;
-        
-        // 初始化兑换状态
-        if (redeemed) {
-            redeemBtn.disabled = true;
-            redeemBtn.innerHTML = '<i class="fas fa-check"></i> 已兑换';
-            redeemBtn.classList.add('disabled');
-        }
         
         // 签到状态
         let lastSigninDate = localStorage.getItem('lastSigninDate');
@@ -1466,6 +1508,9 @@
             
             // 初始化商品解锁状态
             initUnlockedProducts();
+            
+            // 初始化已使用兑换码显示
+            updateUsedCodesDisplay();
             
             // 关闭弹窗按钮
             closeModalBtn.addEventListener('click', closeModal);
@@ -1493,7 +1538,7 @@
             // 钻石兑换表单
             redeemForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                const code = document.getElementById('redeemCode').value;
+                const code = document.getElementById('redeemCode').value.trim();
                 redeemCode(code);
             });
         });
@@ -1524,6 +1569,23 @@
             
             // 保存解锁状态
             localStorage.setItem('unlockedProducts', JSON.stringify(unlockedProducts));
+        }
+        
+        // 更新已使用兑换码显示
+        function updateUsedCodesDisplay() {
+            usedCodesList.innerHTML = '';
+            
+            if (usedCodes.length === 0) {
+                usedCodesList.innerHTML = '<div class="code-badge">暂无已使用兑换码</div>';
+                return;
+            }
+            
+            usedCodes.forEach(code => {
+                const badge = document.createElement('div');
+                badge.className = 'code-badge';
+                badge.innerHTML = `<i class="fas fa-gem"></i> ${code}`;
+                usedCodesList.appendChild(badge);
+            });
         }
         
         // 创建背景几何图形和光斑
@@ -1812,11 +1874,6 @@
         
         // 打开兑换弹窗
         function openRedeem() {
-            if (redeemed) {
-                showNotification("您已经兑换过钻石，无法再次兑换", "warning");
-                return;
-            }
-            
             redeemModal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -1829,55 +1886,35 @@
         
         // 兑换钻石
         function redeemCode(code) {
-            // 检查是否已经兑换过
-            if (redeemed) {
-                showNotification("您已经兑换过钻石，无法再次兑换", "error");
-                closeRedeem();
+            // 检查兑换码是否已被使用
+            if (usedCodes.includes(code)) {
+                showNotification("该兑换码已被使用", "error");
                 return;
             }
             
-          // 检查兑换码是否有效
-if (code.toLowerCase() === "silong3396" || code.toLowerCase() === "silong2584") {
-    // 检查兑换码是否已被使用
-    if (usedCodes.includes(code)) {
-        showNotification("该兑换码已被使用", "error");
-        return;
-    }
+            // 检查兑换码是否有效
+            if (validCodes.hasOwnProperty(code.toLowerCase())) {
+                const diamondsToAdd = validCodes[code.toLowerCase()];
                 
-              // 兑换成功
-// 根据不同兑换码设置对应的钻石数量
-let diamondsToAdd = 0;
-if (code.toLowerCase() === "silong666") {
-    diamondsToAdd = 50; // 第一个兑换码对应50钻石
-} else if (code.toLowerCase() === "silong2584") {
-    diamondsToAdd = 40; // 第二个兑换码对应40钻石
-}
-
-userDiamonds += diamondsToAdd;
-localStorage.setItem('userDiamonds', userDiamonds);
-diamondAmount.textContent = userDiamonds;
-
-// 标记为已兑换
-redeemed = true;
-localStorage.setItem('redeemed', 'true');
-
-// 记录已使用的兑换码
-usedCodes.push(code);
-localStorage.setItem('usedCodes', JSON.stringify(usedCodes));
-
-// 更新兑换按钮状态
-redeemBtn.disabled = true;
-redeemBtn.innerHTML = '<i class="fas fa-check"></i> 已兑换';
-redeemBtn.classList.add('disabled');
-
-showNotification(`兑换成功！获得${diamondsToAdd}钻石`, "success");
-closeRedeem();
-
-// 清空输入框
-document.getElementById('redeemCode').value = "";
-} else {
-showNotification("无效的兑换码", "error");
-}
+                // 增加钻石
+                userDiamonds += diamondsToAdd;
+                localStorage.setItem('userDiamonds', userDiamonds);
+                diamondAmount.textContent = userDiamonds;
+                
+                // 记录已使用的兑换码
+                usedCodes.push(code);
+                localStorage.setItem('usedCodes', JSON.stringify(usedCodes));
+                
+                // 更新显示
+                updateUsedCodesDisplay();
+                
+                showNotification(`兑换成功！获得${diamondsToAdd}钻石`, "success");
+                
+                // 清空输入框
+                document.getElementById('redeemCode').value = "";
+            } else {
+                showNotification("无效的兑换码", "error");
+            }
         }
         
         // 筛选图包
