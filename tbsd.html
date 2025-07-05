@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>图包商店</title>
+    <title>图包商店 | 金币兑换系统</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -20,6 +20,10 @@
             --success: #4caf50;
             --warning: #ff9800;
             --danger: #f44336;
+            --diamond: #b9f2ff;
+            --gold: #ffd700;
+            --diamond-gradient: linear-gradient(135deg, #b9f2ff, #70e4ff, #00b0ff);
+            --gold-gradient: linear-gradient(135deg, #ffd700, #ffcc00, #ffa500);
             --nav-height: 80px;
         }
         
@@ -36,9 +40,10 @@
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
+            background-image: radial-gradient(circle at 10% 20%, rgba(25, 118, 210, 0.1) 0%, rgba(10, 25, 41, 1) 80%);
         }
         
-        /* 背景效果 - 增强 */
+        /* 增强背景效果 */
         .background-effects {
             position: fixed;
             top: 0;
@@ -94,30 +99,14 @@
             50% { transform: translateY(-20px); }
         }
         
-        /* 页面容器 */
-        .page-container {
-            display: none;
-            animation: fadeIn 0.5s ease;
-            min-height: calc(100vh - 180px);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
+        @keyframes shine {
+            0% { background-position: -100px; }
+            100% { background-position: 200px; }
         }
         
-        .page-container.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        /* 顶部区域 - 增强 */
+        /* 顶部导航 */
         .header {
-            padding: 15px 0;
+            padding: 10px 0;
             text-align: center;
             position: relative;
             z-index: 10;
@@ -125,20 +114,152 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--medium-blue);
             box-shadow: 0 5px 30px rgba(25, 118, 210, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .nav-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            padding: 0 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .nav-top-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .currency-container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .currency-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 8px 15px;
+            border-radius: 30px;
+            border: 1px solid var(--diamond);
+            box-shadow: 0 0 15px rgba(185, 242, 255, 0.3);
+        }
+        
+        .gold-display {
+            border: 1px solid var(--gold);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        .diamond-icon, .gold-icon {
+            font-size: 1.3rem;
+        }
+        
+        .diamond-icon {
+            color: var(--diamond);
+        }
+        
+        .gold-icon {
+            color: var(--gold);
+        }
+        
+        .currency-amount {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .diamond-amount {
+            background: var(--diamond-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .gold-amount {
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .signin-btn {
+            background: var(--gold-gradient);
+            color: var(--black);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+        
+        .signin-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--gold);
+        }
+        
+        .signin-btn.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .redeem-btn {
+            background: transparent;
+            color: var(--white);
+            border: 1px solid var(--diamond);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .redeem-btn:hover {
+            background: rgba(185, 242, 255, 0.1);
+            box-shadow: 0 0 15px rgba(185, 242, 255, 0.3);
+        }
+        
+        .redeem-btn.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: rgba(144, 202, 249, 0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
         }
         
         .logo {
             font-size: 2.2rem;
             font-weight: 800;
             text-transform: uppercase;
-            margin-bottom: 15px;
             position: relative;
             display: inline-block;
             color: var(--white);
             text-shadow: 0 0 10px var(--neon-blue);
             letter-spacing: 3px;
-            cursor: pointer;
             transition: all 0.3s ease;
+            margin-bottom: 15px;
         }
         
         .logo:hover {
@@ -181,7 +302,7 @@
         
         .search-container {
             max-width: 600px;
-            margin: 15px auto 0;
+            margin: 0 auto;
             position: relative;
         }
         
@@ -376,6 +497,30 @@
             z-index: 2;
         }
         
+        .product-price {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            color: var(--black);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 0 8px rgba(185, 242, 255, 0.5);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .gold-price {
+            background: var(--gold-gradient);
+        }
+        
+        .diamond-price {
+            background: var(--diamond-gradient);
+        }
+        
         .product-content {
             padding: 20px;
         }
@@ -424,6 +569,23 @@
             letter-spacing: 0.5px;
         }
         
+        .download-btn.locked {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+        }
+        
+        .download-btn.diamond-locked {
+            background: rgba(185, 242, 255, 0.2);
+            border: 1px solid var(--diamond);
+            color: var(--diamond);
+        }
+        
+        .download-btn.diamond-locked:hover {
+            background: rgba(185, 242, 255, 0.3);
+            box-shadow: 0 0 15px var(--diamond);
+        }
+        
         /* 响应式调整 */
         @media (max-width: 768px) {
             .products {
@@ -440,6 +602,16 @@
             
             .product-name {
                 font-size: 1.3rem;
+            }
+            
+            .nav-top {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .currency-container {
+                flex-direction: column;
+                gap: 10px;
             }
         }
         
@@ -491,6 +663,10 @@
         
         .notification.error {
             background: var(--danger);
+        }
+        
+        .notification.warning {
+            background: var(--warning);
         }
         
         /* 高亮效果 */
@@ -729,6 +905,140 @@
             font-size: 0.8rem;
             color: var(--light-blue);
         }
+        
+        /* 兑换码弹窗 */
+        .redeem-modal {
+            width: 90%;
+            max-width: 500px;
+            background: rgba(10, 25, 41, 0.95);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--diamond);
+            box-shadow: 0 0 30px rgba(185, 242, 255, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.active .redeem-modal {
+            transform: scale(1);
+        }
+        
+        .redeem-header {
+            padding: 16px 20px;
+            background: rgba(185, 242, 255, 0.2);
+            border-bottom: 1px solid var(--diamond);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .redeem-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--white);
+            text-shadow: 0 0 8px var(--diamond);
+        }
+        
+        .redeem-content {
+            padding: 25px;
+        }
+        
+        .redeem-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-label {
+            font-size: 1rem;
+            color: var(--neon-light);
+        }
+        
+        .form-input {
+            padding: 12px 15px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--diamond);
+            color: var(--white);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            box-shadow: 0 0 15px var(--diamond);
+            border-color: var(--diamond);
+        }
+        
+        .redeem-submit {
+            padding: 12px;
+            background: var(--diamond-gradient);
+            border: none;
+            border-radius: 8px;
+            color: var(--black);
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .redeem-submit:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 15px var(--diamond);
+        }
+        
+        .redeem-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(185, 242, 255, 0.1);
+            border-radius: 8px;
+            border: 1px solid var(--diamond);
+            font-size: 0.9rem;
+            color: var(--light-blue);
+            line-height: 1.6;
+        }
+        
+        /* 新增样式 */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            padding: 0 20px;
+            margin-bottom: 15px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .top-bar-center {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
     </style>
 </head>
 <body>
@@ -763,34 +1073,10 @@
                         <p class="product-desc-modal" id="modalDesc"></p>
                     </div>
                     
-                  <div class="download-options">
-    <h3 class="download-title">选择下载方式</h3>
-    <div class="download-buttons">
-        <!-- 夸克网盘按钮（外部跳转） -->
-        <button class="download-option" onclick="window.open('https://share.feijipan.com/s/O0MurwTl', '_blank', 'noopener,noreferrer')">
-            <div class="option-icon">
-                <i class="fab fa-telegram-plane"></i>
-            </div>
-            <div class="option-name">夸克网盘</div>
-            <div class="option-desc">超大空间 | 会员加速</div>
-        </button>
-        <!-- 蓝奏云按钮（外部跳转） -->
-        <button class="download-option" onclick="window.open('https://link3.cc/silong9721', '_blank', 'noopener,noreferrer')">
-            <div class="option-icon">
-                <i class="fas fa-cloud-download-alt"></i>
-            </div>
-            <div class="option-name">蓝奏云</div>
-            <div class="option-desc">国内推荐 | 稳定快速</div>
-        </button>
-        <!-- 网页下载按钮（外部跳转） -->
-        <button class="download-option" onclick="window.open('https://pan.quark.cn/s/84e6b55ba10c?pwd=Cxr6', '_blank', 'noopener,noreferrer')">
-            <div class="option-icon">
-                <i class="fas fa-download"></i>
-            </div>
-            <div class="option-name">网页下载</div>
-            <div class="option-desc">在线下载 | 无需登录</div>
-        
-                            </div>
+                    <div class="download-options">
+                        <h3 class="download-title">选择下载方式</h3>
+                        <div class="download-buttons" id="downloadButtons">
+                            <!-- 下载按钮将通过JavaScript动态生成 -->
                         </div>
                     </div>
                 </div>
@@ -798,10 +1084,77 @@
         </div>
     </div>
     
+    <!-- 兑换码弹窗 -->
+    <div class="modal-overlay" id="redeemModal">
+        <div class="redeem-modal">
+            <div class="redeem-header">
+                <h2 class="redeem-title">钻石兑换</h2>
+                <button class="close-modal" id="closeRedeemModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="redeem-content">
+                <form class="redeem-form" id="redeemForm">
+                    <div class="form-group">
+                        <label class="form-label">兑换码</label>
+                        <input type="text" class="form-input" id="redeemCode" placeholder="输入您的兑换码" required>
+                    </div>
+                    <button type="submit" class="redeem-submit">
+                        <i class="fas fa-gem"></i>
+                        兑换钻石
+                    </button>
+                </form>
+                <div class="redeem-info">
+                    <p><i class="fas fa-info-circle"></i> 兑换码可以通过参与活动或购买获得</p>
+                    <p><i class="fas fa-lightbulb"></i> 每个兑换码可兑换50钻石，有效期30天</p>
+                    <p><i class="fas fa-exclamation-triangle"></i> 每个设备仅限兑换一次</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- 顶部区域 -->
     <header class="header">
-        <div class="logo">TUBAO STORE</div>
-        
+        <!-- 标题 -->
+        <div class="logo-container">
+            <div class="logo">TUBAO STORE</div>
+        </div>
+
+        <!-- 顶部按钮布局 -->
+        <div class="top-bar">
+            <!-- 左侧：签到按钮 -->
+            <div class="top-bar-left">
+                <button class="signin-btn" id="signinBtn">
+                    <i class="fas fa-calendar-check"></i>
+                    每日签到
+                </button>
+            </div>
+            
+            <!-- 中间：金币和钻石显示 -->
+            <div class="top-bar-center">
+                <div class="currency-display gold-display">
+                    <i class="fas fa-coins gold-icon"></i>
+                    <span class="currency-amount gold-amount" id="goldAmount">100</span>
+                    <span>金币</span>
+                </div>
+                
+                <div class="currency-display">
+                    <i class="fas fa-gem diamond-icon"></i>
+                    <span class="currency-amount diamond-amount" id="diamondAmount">100</span>
+                    <span>钻石</span>
+                </div>
+            </div>
+            
+            <!-- 右侧：兑换按钮 -->
+          <div class="top-bar-center">
+                <button class="redeem-btn" id="redeemBtn">
+                    <i class="fas fa-gift"></i>
+                    兑换钻石
+                </button>
+            </div>
+        </div>
+
+        <!-- 搜索框 -->
         <div class="search-container">
             <input type="text" class="search-bar" id="searchInput" placeholder="搜索图包标题或描述...">
             <button class="search-btn" id="searchBtn">
@@ -817,16 +1170,20 @@
             
             <div class="categories">
                 <button class="category-btn active" data-category="all">
-                    <i class="fas fa-th-large"></i>
-                    <span>全部图包</span>
+                    <i class="fas fa-star"></i>
+                    全部图包
                 </button>
                 <button class="category-btn" data-category="june">
-                    <i class="fas fa-cloud-moon"></i>
-                    <span>6月图包</span>
+                    <i class="fas fa-sun"></i>
+                    6月图包
                 </button>
                 <button class="category-btn" data-category="july">
-                    <i class="fas fa-sun"></i>
-                    <span>7月图包</span>
+                    <i class="fas fa-fire"></i>
+                    7月图包
+                       </button>
+                <button class="category-btn" data-category="premium">
+                    <i class="fas fa-fire"></i>
+                    往期图包
                 </button>
             </div>
             
@@ -836,62 +1193,77 @@
                     <div class="product-image">
                         <img src="https://s21.ax1x.com/2025/07/05/pVKs1IO.jpg" alt="6月图包第一期">
                         <span class="product-tag">6月图包</span>
+                        <div class="product-price diamond-price">
+                            <i class="fas fa-gem"></i>
+                            40 钻石
+                        </div>
                     </div>
                     <div class="product-content">
                         <h3 class="product-name">6月图包第一期</h3>
                         <p class="product-desc">🔥本次更新图包，澜-花海、孙策-奇旅、亚连-落雪白狼、马可波罗-妄想实况 ！</p>
-                        <button class="download-btn" data-id="1">
-                            <i class="fas fa-download"></i>
-                            下载图包
+                        <button class="download-btn diamond-locked" data-id="1">
+                            <i class="fas fa-lock"></i>
+                            购买解锁 (40钻石)
                         </button>
                     </div>
                 </div>
                 
-                
-                <!-- 新增图包 -->
-                <div class="product-card" data-category="june" data-name="赛博空间" data-desc="未来科技感十足的虚拟空间和数字界面素材">
+                <!-- 7月图包 -->
+                <div class="product-card" data-category="july" data-name="7月图包" data-desc="🔥本次更新图包，黑崎一护、赵云 - 乘龙·铭钟鼎、裴擒虎 - 祥瑞亨通、澜 - 年限、勘探员 - 盛夏飞盘 ！">
                     <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800" alt="赛博空间图包">
-                        <span class="product-tag">6月图包</span>
-                    </div>
-                    <div class="product-content">
-                        <h3 class="product-name">6月图包第二期</h3>
-                        <p class="product-desc">未来科技感十足的虚拟空间和数字界面素材，包含HUD元素和科技网格背景</p>
-                        <button class="download-btn" data-id="3">
-                            <i class="fas fa-download"></i>
-                            下载图包
-                        </button>
-                    </div>
-                </div>
-                
-                  <!-- 7月图包 -->
-                <div class="product-card" data-category="july" data-name="夏日幻境" data-desc="夏日海滩、光影效果和透明材质的高清素材合集">
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=800" alt="夏日幻境图包">
+                        <img src="https://s21.ax1x.com/2025/07/05/pVKrIxA.jpg" alt="7月图包第一期">
                         <span class="product-tag">7月图包</span>
+                        <div class="product-price diamond-price">
+                            <i class="fas fa-gem"></i>
+                            50 钻石
+                        </div>
                     </div>
                     <div class="product-content">
                         <h3 class="product-name">7月图包第一期</h3>
-                        <p class="product-desc">内容待定</p>
-                        <button class="download-btn" data-id="2">
-                            <i class="fas fa-download"></i>
-                            下载图包
+                        <p class="product-desc">🔥本次更新图包，黑崎一护、赵云 - 乘龙·铭钟鼎、裴擒虎 - 祥瑞亨通、澜 - 年限、勘探员 - 盛夏飞盘 ！</p>
+                        <button class="download-btn diamond-locked" data-id="2">
+                            <i class="fas fa-lock"></i>
+                            购买解锁 (50钻石)
                         </button>
                     </div>
                 </div>
                 
-                <!-- 新增图包 -->
-                <div class="product-card" data-category="july" data-name="极光之夜" data-desc="梦幻极光与星空夜景的高清素材合集">
+                <!-- 新商品1 -->
+                <div class="product-card" data-category="premium" data-name="稀有图包" data-desc="？？？">
                     <div class="product-image">
-                        <img src="https://s21.ax1x.com/2025/07/05/pVKrIxA.jpg" alt="极光之夜图包">
-                        <span class="product-tag">7月图包</span>
+                        <img src="https://images.unsplash.com/photo-158047766。7995-2b94f01c9516?q=80&w=800" alt="往期图包">
+                        <span class="product-tag">往期图包</span>
+                        <div class="product-price gold-price">
+                            <i class="fas fa-coins"></i>
+                            20 金币
+                        </div>
                     </div>
                     <div class="product-content">
-                        <h3 class="product-name">7月图包第二期</h3>
-                        <p class="product-desc">🔥本次更新图包，黑崎一护、赵云 - 乘龙·铭钟鼎、裴擒虎 - 祥瑞亨通、澜 - 年限、勘探员 - 盛夏飞盘 ！</p>
-                        <button class="download-btn" data-id="4">
-                            <i class="fas fa-download"></i>
-                            下载图包
+                        <h3 class="product-name">往期图包</h3>
+                        <p class="product-desc">？？？</p>
+                        <button class="download-btn locked" data-id="3">
+                            <i class="fas fa-lock"></i>
+                            购买解锁 (20金币)
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 新商品2 -->
+                <div class="product-card" data-category="premium" data-name="往期图包" data-desc="？？？">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-15933058。41991-05c297ba4575?q=80&w=800" alt="往期图包">
+                        <span class="product-tag">往期图包</span>
+                        <div class="product-price gold-price">
+                            <i class="fas fa-coins"></i>
+                            20 金币
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-name">往期图包</h3>
+                        <p class="product-desc">？？？</p>
+                        <button class="download-btn locked" data-id="4">
+                            <i class="fas fa-lock"></i>
+                            购买解锁 (20金币)
                         </button>
                     </div>
                 </div>
@@ -900,7 +1272,7 @@
     </div>
     
     <footer class="footer">
-        <p>© 2023 图包商店 | </p>
+        <p>© 2025 图包商店【泷】 | 每月定期更新</p>
     </footer>
 
     <script>
@@ -910,33 +1282,121 @@
                 id: 1, 
                 name: "6月图包第一期", 
                 category: "june", 
-                desc: "🔥本次更新图包，澜-花海、孙策-奇旅、亚连-落雪白狼、马可波罗-妄想实况 ！",
-                imageUrl: "https://link3.cc/silong6969",
+                desc: "🔥本次更新图包，包含澜-花海、孙策-奇旅、亚连-落雪白狼、马可波罗-妄想实况 ！",
+                imageUrl: "https://s21.ax1x.com/2025/07/05/pVKs1IO.jpg",
                 detailImageUrl: "https://s21.ax1x.com/2025/07/05/pVKs1IO.jpg",
+                price: 40,
+                currency: "diamond",
+                downloadOptions: [
+                    {
+                        name: "夸克网盘",
+                        icon: "fab fa-telegram-plane",
+                        desc: "超大空间 | 会员加速",
+                        link: "https://pan.quark.cn/s/84e6b55ba10c?pwd=Cxr6"
+                    },
+                    {
+                        name: "蓝奏云",
+                        icon: "fas fa-cloud-download-alt",
+                        desc: "国内推荐 | 稳定快速",
+                        link: "https://link3.cc/silong0000"
+                    },
+                    {
+                        name: "小飞机网盘",
+                        icon: "fas fa-download",
+                        desc: "在线下载 | 无需登录",
+                        link: "https://share.feijipan.com/s/uPMS2VFm"
+                    }
+                ]
             },
             { 
                 id: 2, 
-                name: "夏日幻境系列", 
+                name: "7月图包第一期", 
                 category: "july", 
-                desc: "夏日海滩、光影效果和透明材质的高清素材合集，包含水面反射、气泡等透明元素",
-                imageUrl: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=800",
-                detailImageUrl: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=800",
+                desc: "🔥本次更新图包，黑崎一护、赵云 - 乘龙·铭钟鼎、裴擒虎 - 祥瑞亨通、澜 - 年限、勘探员 - 盛夏飞盘 ！",
+                imageUrl: "https://s21.ax1x.com/2025/07/05/pVKrIxA.jpg",
+                detailImageUrl: "https://s21.ax1x.com/2025/07/05/pVKrIxA.jpg",
+                price: 50,
+                currency: "diamond",
+                downloadOptions: [
+                    {
+                        name: "夸克网盘",
+                        icon: "fab fa-telegram-plane",
+                        desc: "超大空间 | 会员加速",
+                        link: "https://pan.quark.cn/s/0c463e6e24eb?pwd=iDiH"
+                    },
+                    {
+                        name: "蓝奏云",
+                        icon: "fas fa-cloud-download-alt",
+                        desc: "国内推荐 | 稳定快速",
+                        link: "https://link3.cc/july1"
+                    },
+                    {
+                        name: "小飞机网盘",
+                        icon: "fas fa-download",
+                        desc: "在线下载 | 无需登录",
+                        link: "https://share.feijipan.com/s/IuMLiynJ"
+                    }
+                ]
             },
             { 
                 id: 3, 
-                name: "赛博空间系列", 
-                category: "june", 
-                desc: "未来科技感十足的虚拟空间和数字界面素材，包含HUD元素和科技网格背景",
-                imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800",
-                detailImageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800",
+                name: "往期图包", 
+                category: "premium", 
+                desc: "？？？",
+                imageUrl: "https://images.unsplash.com/photo-1580477667995-2b94f01c。9516?q=80&w=800",
+                detailImageUrl: "https://images.unsplash.com/photo-1580477。667995-2b94f01c9516?q=80&w=800",
+                price: 20,
+                currency: "gold",
+                downloadOptions: [
+                    {
+                        name: "夸克网盘",
+                        icon: "fab fa-telegram-plane",
+                        desc: "超大空间 | 会员加速",
+                        link: "https://share.feijipan.com/s/RarePack"
+                    },
+                    {
+                        name: "蓝奏云",
+                        icon: "fas fa-cloud-download-alt",
+                        desc: "国内推荐 | 稳定快速",
+                        link: "https://link3.cc/rare-pack"
+                    },
+                    {
+                        name: "网页下载",
+                        icon: "fas fa-download",
+                        desc: "在线下载 | 无需登录",
+                        link: "https://pan.quark.cn/s/rare-pack"
+                    }
+                ]
             },
             { 
                 id: 4, 
-                name: "极光之夜系列", 
-                category: "july", 
-                desc: "梦幻极光与星空夜景的高清素材合集，包含多种色彩变化的极光效果",
-                imageUrl: "https://images.unsplash.com/photo-1505506874110-6a7a69069a08?q=80&w=800",
-                detailImageUrl: "https://images.unsplash.com/photo-1505506874110-6a7a69069a08?q=80&w=800",
+                name: "往期图包", 
+                category: "premium", 
+                desc: "？？？",
+                imageUrl: "https://images.unspla。sh.com/photo-1593305841991-05c297ba4575?q=80&w=800",
+                detailImageUrl: "https://images.unsplash.co。m/photo-1593305841991-05c297ba4575?q=80&w=800",
+                price: 20,
+                currency: "gold",
+                downloadOptions: [
+                    {
+                        name: "夸克网盘",
+                        icon: "fab fa-telegram-plane",
+                        desc: "超大空间 | 会员加速",
+                        link: "https://share.feijipan.com/s/EffectsPack"
+                    },
+                    {
+                        name: "蓝奏云",
+                        icon: "fas fa-cloud-download-alt",
+                        desc: "国内推荐 | 稳定快速",
+                        link: "https://link3.cc/effects-pack"
+                    },
+                    {
+                        name: "网页下载",
+                        icon: "fas fa-download",
+                        desc: "在线下载 | 无需登录",
+                        link: "https://pan.quark.cn/s/effects-pack"
+                    }
+                ]
             }
         ];
         
@@ -946,6 +1406,55 @@
         const modalTitle = document.getElementById('modalTitle');
         const modalImage = document.getElementById('modalImage');
         const modalDesc = document.getElementById('modalDesc');
+        const downloadButtonsContainer = document.getElementById('downloadButtons');
+        const goldAmount = document.getElementById('goldAmount');
+        const diamondAmount = document.getElementById('diamondAmount');
+        const redeemModal = document.getElementById('redeemModal');
+        const closeRedeemModal = document.getElementById('closeRedeemModal');
+        const redeemBtn = document.getElementById('redeemBtn');
+        const signinBtn = document.getElementById('signinBtn');
+        const redeemForm = document.getElementById('redeemForm');
+        
+        // 用户状态
+        let userGold = localStorage.getItem('userGold');
+        let userDiamonds = localStorage.getItem('userDiamonds');
+        let unlockedProducts = JSON.parse(localStorage.getItem('unlockedProducts')) || [];
+        let redeemed = localStorage.getItem('redeemed') === 'true';
+        let usedCodes = JSON.parse(localStorage.getItem('usedCodes')) || [];
+        
+        if (userGold === null) {
+            userGold = 0; // 初始金币
+            localStorage.setItem('userGold', userGold);
+        } else {
+            userGold = parseInt(userGold);
+        }
+        
+        if (userDiamonds === null) {
+            userDiamonds = 0; // 初始钻石
+            localStorage.setItem('userDiamonds', userDiamonds);
+        } else {
+            userDiamonds = parseInt(userDiamonds);
+        }
+        
+        goldAmount.textContent = userGold;
+        diamondAmount.textContent = userDiamonds;
+        
+        // 初始化兑换状态
+        if (redeemed) {
+            redeemBtn.disabled = true;
+            redeemBtn.innerHTML = '<i class="fas fa-check"></i> 已兑换';
+            redeemBtn.classList.add('disabled');
+        }
+        
+        // 签到状态
+        let lastSigninDate = localStorage.getItem('lastSigninDate');
+        if (lastSigninDate) {
+            const today = new Date().toDateString();
+            if (lastSigninDate === today) {
+                signinBtn.classList.add('disabled');
+                signinBtn.innerHTML = '<i class="fas fa-check"></i> 今日已签到';
+            }
+        }
         
         // 初始化页面
         document.addEventListener('DOMContentLoaded', function() {
@@ -955,8 +1464,12 @@
             // 初始化事件监听
             initEventListeners();
             
+            // 初始化商品解锁状态
+            initUnlockedProducts();
+            
             // 关闭弹窗按钮
             closeModalBtn.addEventListener('click', closeModal);
+            closeRedeemModal.addEventListener('click', closeRedeem);
             
             // 点击弹窗外部关闭
             modal.addEventListener('click', function(e) {
@@ -965,20 +1478,53 @@
                 }
             });
             
-            // 下载选项点击事件
-            document.querySelectorAll('.download-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    const link = this.dataset.link;
-                    showNotification(`正在跳转到下载链接: ${this.querySelector('.option-name').textContent}`);
-                    
-                    // 添加点击动画
-                    this.classList.add('clicked');
-                    setTimeout(() => {
-                        this.classList.remove('clicked');
-                    }, 300);
-                });
+            redeemModal.addEventListener('click', function(e) {
+                if (e.target === redeemModal) {
+                    closeRedeem();
+                }
+            });
+            
+            // 钻石兑换按钮
+            redeemBtn.addEventListener('click', openRedeem);
+            
+            // 签到按钮
+            signinBtn.addEventListener('click', signin);
+            
+            // 钻石兑换表单
+            redeemForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const code = document.getElementById('redeemCode').value;
+                redeemCode(code);
             });
         });
+        
+        // 初始化已解锁商品
+        function initUnlockedProducts() {
+            // 更新商品按钮状态
+            document.querySelectorAll('.download-btn').forEach(btn => {
+                const assetId = parseInt(btn.dataset.id);
+                
+                if (unlockedProducts.includes(assetId)) {
+                    btn.innerHTML = '<i class="fas fa-download"></i> 下载图包';
+                    btn.classList.remove('locked');
+                    btn.classList.remove('diamond-locked');
+                } else {
+                    const asset = assets.find(a => a.id === assetId);
+                    if (asset && asset.price > 0) {
+                        if (asset.currency === 'diamond') {
+                            btn.innerHTML = `<i class="fas fa-lock"></i> 购买解锁 (${asset.price}钻石)`;
+                            btn.classList.add('diamond-locked');
+                        } else {
+                            btn.innerHTML = `<i class="fas fa-lock"></i> 购买解锁 (${asset.price}金币)`;
+                            btn.classList.add('locked');
+                        }
+                    }
+                }
+            });
+            
+            // 保存解锁状态
+            localStorage.setItem('unlockedProducts', JSON.stringify(unlockedProducts));
+        }
         
         // 创建背景几何图形和光斑
         function createBackgroundEffects() {
@@ -1059,13 +1605,21 @@
         }
         
         // 显示通知
-        function showNotification(message, isError = false) {
+        function showNotification(message, type = "success") {
             const notification = document.getElementById('notification');
-            notification.innerHTML = isError 
-                ? `<i class="fas fa-exclamation-circle"></i><span>${message}</span>`
-                : `<i class="fas fa-check-circle"></i><span>${message}</span>`;
+            notification.innerHTML = '';
             
-            notification.className = isError ? 'notification error' : 'notification';
+            if (type === "error") {
+                notification.innerHTML = `<i class="fas fa-exclamation-circle"></i><span>${message}</span>`;
+                notification.className = 'notification error';
+            } else if (type === "warning") {
+                notification.innerHTML = `<i class="fas fa-exclamation-triangle"></i><span>${message}</span>`;
+                notification.className = 'notification warning';
+            } else {
+                notification.innerHTML = `<i class="fas fa-check-circle"></i><span>${message}</span>`;
+                notification.className = 'notification';
+            }
+            
             notification.classList.add('show');
             
             setTimeout(() => {
@@ -1118,9 +1672,87 @@
                     }, 300);
                     
                     const assetId = parseInt(this.dataset.id);
-                    showAssetDetails(assetId);
+                    const asset = assets.find(a => a.id === assetId);
+                    
+                    if (unlockedProducts.includes(assetId)) {
+                        // 已解锁，显示详情
+                        showAssetDetails(assetId);
+                    } else if (asset.price > 0) {
+                        // 需要购买的商品
+                        let currencyEnough = false;
+                        if (asset.currency === "gold") {
+                            currencyEnough = userGold >= asset.price;
+                        } else if (asset.currency === "diamond") {
+                            currencyEnough = userDiamonds >= asset.price;
+                        }
+
+                        if (currencyEnough) {
+                            // 扣除相应的货币
+                            if (asset.currency === "gold") {
+                                userGold -= asset.price;
+                                localStorage.setItem('userGold', userGold);
+                                goldAmount.textContent = userGold;
+                            } else if (asset.currency === "diamond") {
+                                userDiamonds -= asset.price;
+                                localStorage.setItem('userDiamonds', userDiamonds);
+                                diamondAmount.textContent = userDiamonds;
+                            }
+                            
+                            // 解锁商品
+                            unlockedProducts.push(assetId);
+                            localStorage.setItem('unlockedProducts', JSON.stringify(unlockedProducts));
+                            
+                            // 更新按钮文本
+                            this.innerHTML = '<i class="fas fa-download"></i> 下载图包';
+                            this.classList.remove('locked');
+                            this.classList.remove('diamond-locked');
+                            
+                            // 显示商品详情
+                            showAssetDetails(assetId);
+                            
+                            showNotification(`成功解锁商品！扣除${asset.price}${asset.currency==='gold'?'金币':'钻石'}`, "success");
+                        } else {
+                            showNotification(`${asset.currency==='gold'?'金币':'钻石'}不足！需要${asset.price}${asset.currency==='gold'?'金币':'钻石'}`, "error");
+                        }
+                    } else {
+                        // 免费商品
+                        showAssetDetails(assetId);
+                    }
                 });
             });
+        }
+        
+        // 签到功能
+        function signin() {
+            const today = new Date().toDateString();
+            
+            // 检查今天是否已经签到
+            if (lastSigninDate === today) {
+                showNotification("您今天已经签到过了", "warning");
+                return;
+            }
+            
+            // 添加金币
+            const signinReward = 10;
+            userGold += signinReward;
+            localStorage.setItem('userGold', userGold);
+            goldAmount.textContent = userGold;
+            
+            // 更新签到状态
+            lastSigninDate = today;
+            localStorage.setItem('lastSigninDate', lastSigninDate);
+            
+            // 更新按钮状态
+            signinBtn.classList.add('disabled');
+            signinBtn.innerHTML = '<i class="fas fa-check"></i> 今日已签到';
+            
+            // 添加动画效果
+            signinBtn.classList.add('clicked');
+            setTimeout(() => {
+                signinBtn.classList.remove('clicked');
+            }, 300);
+            
+            showNotification(`签到成功！获得${signinReward}金币`, "success");
         }
         
         // 显示商品详情弹窗
@@ -1132,6 +1764,36 @@
             modalTitle.textContent = asset.name;
             modalImage.src = asset.detailImageUrl;
             modalDesc.textContent = asset.desc;
+            
+            // 清空下载按钮容器
+            downloadButtonsContainer.innerHTML = '';
+            
+            // 动态生成下载按钮
+            asset.downloadOptions.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'download-option';
+                button.innerHTML = `
+                    <div class="option-icon">
+                        <i class="${option.icon}"></i>
+                    </div>
+                    <div class="option-name">${option.name}</div>
+                    <div class="option-desc">${option.desc}</div>
+                `;
+                
+                // 添加点击事件
+                button.addEventListener('click', function() {
+                    showNotification(`正在跳转到下载链接: ${option.name}`);
+                    window.open(option.link, '_blank', 'noopener,noreferrer');
+                    
+                    // 添加点击动画
+                    this.classList.add('clicked');
+                    setTimeout(() => {
+                        this.classList.remove('clicked');
+                    }, 300);
+                });
+                
+                downloadButtonsContainer.appendChild(button);
+            });
             
             // 显示弹窗
             modal.classList.add('active');
@@ -1146,6 +1808,76 @@
             
             // 启用背景滚动
             document.body.style.overflow = '';
+        }
+        
+        // 打开兑换弹窗
+        function openRedeem() {
+            if (redeemed) {
+                showNotification("您已经兑换过钻石，无法再次兑换", "warning");
+                return;
+            }
+            
+            redeemModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 关闭兑换弹窗
+        function closeRedeem() {
+            redeemModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // 兑换钻石
+        function redeemCode(code) {
+            // 检查是否已经兑换过
+            if (redeemed) {
+                showNotification("您已经兑换过钻石，无法再次兑换", "error");
+                closeRedeem();
+                return;
+            }
+            
+          // 检查兑换码是否有效
+if (code.toLowerCase() === "silong3396" || code.toLowerCase() === "silong2584") {
+    // 检查兑换码是否已被使用
+    if (usedCodes.includes(code)) {
+        showNotification("该兑换码已被使用", "error");
+        return;
+    }
+                
+              // 兑换成功
+// 根据不同兑换码设置对应的钻石数量
+let diamondsToAdd = 0;
+if (code.toLowerCase() === "silong666") {
+    diamondsToAdd = 50; // 第一个兑换码对应50钻石
+} else if (code.toLowerCase() === "silong2584") {
+    diamondsToAdd = 40; // 第二个兑换码对应40钻石
+}
+
+userDiamonds += diamondsToAdd;
+localStorage.setItem('userDiamonds', userDiamonds);
+diamondAmount.textContent = userDiamonds;
+
+// 标记为已兑换
+redeemed = true;
+localStorage.setItem('redeemed', 'true');
+
+// 记录已使用的兑换码
+usedCodes.push(code);
+localStorage.setItem('usedCodes', JSON.stringify(usedCodes));
+
+// 更新兑换按钮状态
+redeemBtn.disabled = true;
+redeemBtn.innerHTML = '<i class="fas fa-check"></i> 已兑换';
+redeemBtn.classList.add('disabled');
+
+showNotification(`兑换成功！获得${diamondsToAdd}钻石`, "success");
+closeRedeem();
+
+// 清空输入框
+document.getElementById('redeemCode').value = "";
+} else {
+showNotification("无效的兑换码", "error");
+}
         }
         
         // 筛选图包
@@ -1220,7 +1952,7 @@
             });
             
             if (!found) {
-                showNotification('未找到匹配的图包', true);
+                showNotification('未找到匹配的图包', "error");
             }
         }
     </script>
