@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图包商店（支持外部跳转）</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --deep-blue: #0d47a1;
+            --medium-blue: #1976d2;
+            --light-blue: #90caf9;
+            --neon-blue: #00b0ff;
+            --neon-light: #e3f2fd;
+            --white: #FFFFFF;
+            --black: #0a1929;
+            --dark-bg: #0a1929;
+            --card-bg: rgba(25, 118, 210, 0.15);
+            --glass-bg: rgba(25, 118, 210, 0.25);
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --nav-height: 80px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: var(--dark-bg);
+            color: var(--white);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* 背景效果 - 增强 */
+        .background-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .geometric-shape {
+            position: absolute;
+            border: 1px solid var(--medium-blue);
+            opacity: 0.3;
+            transition: all 5s linear;
+        }
+        
+        .light-spot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 15px 5px var(--neon-blue);
+            opacity: 0;
+            animation: blink 4s infinite;
+        }
+        
+        .neon-pulse {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 176, 255, 0.3) 0%, rgba(0, 176, 255, 0) 70%);
+            filter: blur(20px);
+            opacity: 0;
+            animation: pulse 8s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 0.6; transform: scale(1.5); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* 页面容器 */
+        .page-container {
+            display: none;
+            animation: fadeIn 0.5s ease;
+            min-height: calc(100vh - 180px);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .page-container.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* 顶部区域 - 增强 */
+        .header {
+            padding: 15px 0;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            background: rgba(10, 25, 41, 0.7);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--medium-blue);
+            box-shadow: 0 5px 30px rgba(25, 118, 210, 0.4);
+        }
+        
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+            color: var(--white);
+            text-shadow: 0 0 10px var(--neon-blue);
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .logo:hover {
+            text-shadow: 0 0 20px var(--neon-blue);
+            transform: scale(1.05);
+        }
+        
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -10px;
+            right: -10px;
+            bottom: -5px;
+            background: linear-gradient(45deg, var(--deep-blue), var(--medium-blue), var(--neon-blue));
+            z-index: -1;
+            border-radius: 10px;
+            filter: blur(15px);
+            opacity: 0.7;
+            animation: neonFlow 3s infinite alternate;
+        }
+        
+        .logo::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--deep-blue), var(--medium-blue), var(--neon-blue));
+            z-index: -1;
+            border-radius: 10px;
+            animation: neonFlow 3s infinite alternate-reverse;
+        }
+        
+        @keyframes neonFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        
+        .search-container {
+            max-width: 600px;
+            margin: 15px auto 0;
+            position: relative;
+        }
+        
+        .search-bar {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: var(--white);
+            font-size: 1rem;
+            box-shadow: 0 0 15px rgba(25, 118, 210, 0.5);
+            border: 1px solid var(--medium-blue);
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar:focus {
+            outline: none;
+            box-shadow: 0 0 25px var(--neon-blue);
+            border-color: var(--neon-blue);
+        }
+        
+        .search-bar::placeholder {
+            color: var(--neon-light);
+            opacity: 0.7;
+        }
+        
+        .search-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            color: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .search-btn:hover {
+            color: var(--neon-blue);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        /* 主体内容 */
+        .main-content {
+            max-width: 1200px;
+            margin: 25px auto;
+            padding: 0 20px;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 8px;
+            text-shadow: 0 0 8px var(--neon-blue);
+            text-align: center;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 2px;
+            background: var(--neon-blue);
+            border-radius: 3px;
+            box-shadow: 0 0 8px var(--neon-blue);
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        
+        .category-btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            background: rgba(25, 118, 210, 0.2);
+            border: 1px solid var(--medium-blue);
+            color: var(--white);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .category-btn:hover, .category-btn.active {
+            background: rgba(0, 176, 255, 0.3);
+            box-shadow: 0 0 12px var(--neon-blue);
+            border-color: var(--neon-blue);
+            transform: translateY(-3px);
+        }
+        
+        /* 商品展示区 - 增强 */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .products {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .product-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--medium-blue);
+            box-shadow: 0 0 15px rgba(25, 118, 210, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 0 25px var(--neon-blue);
+        }
+        
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--deep-blue), var(--medium-blue), var(--neon-blue));
+            z-index: -1;
+            border-radius: 17px;
+            animation: neonFlow 3s infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .product-card:hover::before {
+            opacity: 1;
+        }
+        
+        .product-image {
+            height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--deep-blue), var(--medium-blue));
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+        
+        .product-tag {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--neon-blue);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 0 8px var(--neon-blue);
+            z-index: 2;
+        }
+        
+        .product-content {
+            padding: 20px;
+        }
+        
+        .product-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            color: var(--white);
+            text-align: center;
+        }
+        
+        .product-desc {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: var(--neon-light);
+            min-height: 60px;
+            font-size: 0.95rem;
+            text-align: center;
+            padding: 0 10px;
+        }
+        
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--medium-blue);
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .download-btn:hover {
+            background: var(--neon-blue);
+            box-shadow: 0 0 15px var(--neon-blue);
+            letter-spacing: 0.5px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .products {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .product-image {
+                height: 200px;
+            }
+            
+            .product-name {
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.6rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .search-bar {
+                padding: 10px 18px;
+                font-size: 0.95rem;
+            }
+            
+            .product-image {
+                height: 180px;
+            }
+            
+            .product-name {
+                font-size: 1.2rem;
+            }
+        }
+        
+        /* 通知提示 */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: var(--success);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 2000;
+            transform: translateX(150%);
+            transition: transform 0.5s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background: var(--danger);
+        }
+        
+        /* 高亮效果 */
+        .highlight {
+            animation: highlight 2s ease;
+        }
+        
+        @keyframes highlight {
+            0% { box-shadow: 0 0 0 0 rgba(0, 176, 255, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(0, 176, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 176, 255, 0); }
+        }
+        
+        /* 动画类 */
+        .clicked {
+            animation: clickEffect 0.3s ease;
+        }
+        
+        @keyframes clickEffect {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+        
+        /* 页脚样式 */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: var(--light-blue);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(25, 118, 210, 0.3);
+        }
+        
+        .footer a {
+            color: var(--neon-blue);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer a:hover {
+            text-shadow: 0 0 8px var(--neon-blue);
+        }
+        
+        /* 商品详情弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .product-modal {
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            background: rgba(10, 25, 41, 0.95);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid var(--medium-blue);
+            box-shadow: 0 0 30px var(--neon-blue);
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.active .product-modal {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            padding: 16px 20px;
+            background: rgba(25, 118, 210, 0.2);
+            border-bottom: 1px solid var(--medium-blue);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--white);
+            text-shadow: 0 0 8px var(--neon-blue);
+        }
+        
+        .close-modal {
+            background: transparent;
+            border: none;
+            color: var(--light-blue);
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .close-modal:hover {
+            color: var(--neon-blue);
+            transform: rotate(90deg);
+        }
+        
+        .modal-content {
+            display: flex;
+            flex-direction: row;
+            padding: 0;
+            overflow: hidden;
+            flex: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .modal-content {
+                flex-direction: column;
+            }
+        }
+        
+        .modal-image-container {
+            flex: 1;
+            min-height: 250px;
+            background: linear-gradient(135deg, var(--deep-blue), var(--black));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        
+        .modal-image {
+            max-width: 100%;
+            max-height: 350px;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-details {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .modal-section {
+            margin-bottom: 20px;
+        }
+        
+        .section-heading {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: var(--neon-blue);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-heading i {
+            font-size: 1rem;
+        }
+        
+        .product-desc-modal {
+            line-height: 1.6;
+            color: var(--neon-light);
+            font-size: 0.95rem;
+        }
+        
+        .download-options {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(144, 202, 249, 0.2);
+        }
+        
+        .download-title {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            color: var(--neon-blue);
+        }
+        
+        .download-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .download-option {
+            min-width: 160px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            background: rgba(25, 118, 210, 0.2);
+            border: 1px solid var(--medium-blue);
+            color: var(--white);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+        }
+        
+        .download-option:hover {
+            background: var(--neon-blue);
+            box-shadow: 0 0 15px var(--neon-blue);
+            transform: translateY(-3px);
+        }
+        
+        .option-icon {
+            font-size: 1.6rem;
+        }
+        
+        .option-name {
+            font-size: 1rem;
+        }
+        
+        .option-desc {
+            font-size: 0.8rem;
+            color: var(--light-blue);
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景效果 -->
+    <div class="background-effects" id="background"></div>
+    
+    <!-- 通知提示 -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span>操作成功！</span>
+    </div>
+    
+    <!-- 商品详情弹窗 -->
+    <div class="modal-overlay" id="productModal">
+        <div class="product-modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">商品详情</h2>
+                <button class="close-modal" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="modal-image-container">
+                    <img src="" alt="商品大图预览" class="modal-image" id="modalImage">
+                </div>
+                <div class="modal-details">
+                    <div class="modal-section">
+                        <h3 class="section-heading">
+                            <i class="fas fa-align-left"></i>
+                            <span>商品描述</span>
+                        </h3>
+                        <p class="product-desc-modal" id="modalDesc"></p>
+                    </div>
+                    
+                  <div class="download-options">
+    <h3 class="download-title">选择下载方式</h3>
+    <div class="download-buttons">
+        <!-- 夸克网盘按钮（外部跳转） -->
+        <button class="download-option" onclick="window.open('https://share.feijipan.com/s/O0MurwTl', '_blank', 'noopener,noreferrer')">
+            <div class="option-icon">
+                <i class="fab fa-telegram-plane"></i>
+            </div>
+            <div class="option-name">夸克网盘</div>
+            <div class="option-desc">超大空间 | 会员加速</div>
+        </button>
+        <!-- 蓝奏云按钮（外部跳转） -->
+        <button class="download-option" onclick="window.open('https://link3.cc/silong9721', '_blank', 'noopener,noreferrer')">
+            <div class="option-icon">
+                <i class="fas fa-cloud-download-alt"></i>
+            </div>
+            <div class="option-name">蓝奏云</div>
+            <div class="option-desc">国内推荐 | 稳定快速</div>
+        </button>
+        <!-- 网页下载按钮（外部跳转） -->
+        <button class="download-option" onclick="window.open('https://pan.quark.cn/s/84e6b55ba10c?pwd=Cxr6', '_blank', 'noopener,noreferrer')">
+            <div class="option-icon">
+                <i class="fas fa-download"></i>
+            </div>
+            <div class="option-name">网页下载</div>
+            <div class="option-desc">在线下载 | 无需登录</div>
+        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 顶部区域 -->
+    <header class="header">
+        <div class="logo">TUBAO STORE</div>
+        
+        <div class="search-container">
+            <input type="text" class="search-bar" id="searchInput" placeholder="搜索图包标题或描述...">
+            <button class="search-btn" id="searchBtn">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </header>
+    
+    <!-- 首页内容 -->
+    <div class="page-container active" id="homePage">
+        <div class="main-content">
+            <h2 class="section-title">精选图包下载</h2>
+            
+            <div class="categories">
+                <button class="category-btn active" data-category="all">
+                    <i class="fas fa-th-large"></i>
+                    <span>全部图包</span>
+                </button>
+                <button class="category-btn" data-category="june">
+                    <i class="fas fa-cloud-moon"></i>
+                    <span>6月图包</span>
+                </button>
+                <button class="category-btn" data-category="july">
+                    <i class="fas fa-sun"></i>
+                    <span>7月图包</span>
+                </button>
+            </div>
+            
+            <section class="products" id="productsContainer">
+                <!-- 6月图包 -->
+                <div class="product-card" data-category="june" data-name="6月图包" data-desc="🔥本次更新图包，澜-花海、孙策-奇旅、亚连-落雪白狼、马可波罗-妄想实况 ！">
+                    <div class="product-image">
+                        <img src="https://s21.ax1x.com/2025/07/05/pVKs1IO.jpg" alt="6月图包第一期">
+                        <span class="product-tag">6月图包</span>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-name">6月图包第一期</h3>
+                        <p class="product-desc">🔥本次更新图包，澜-花海、孙策-奇旅、亚连-落雪白狼、马可波罗-妄想实况 ！</p>
+                        <button class="download-btn" data-id="1">
+                            <i class="fas fa-download"></i>
+                            下载图包
+                        </button>
+                    </div>
+                </div>
+                
+                
+                <!-- 新增图包 -->
+                <div class="product-card" data-category="june" data-name="赛博空间" data-desc="未来科技感十足的虚拟空间和数字界面素材">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800" alt="赛博空间图包">
+                        <span class="product-tag">6月图包</span>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-name">6月图包第二期</h3>
+                        <p class="product-desc">未来科技感十足的虚拟空间和数字界面素材，包含HUD元素和科技网格背景</p>
+                        <button class="download-btn" data-id="3">
+                            <i class="fas fa-download"></i>
+                            下载图包
+                        </button>
+                    </div>
+                </div>
+                
+                  <!-- 7月图包 -->
+                <div class="product-card" data-category="july" data-name="夏日幻境" data-desc="夏日海滩、光影效果和透明材质的高清素材合集">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=800" alt="夏日幻境图包">
+                        <span class="product-tag">7月图包</span>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-name">7月图包第一期</h3>
+                        <p class="product-desc">内容待定</p>
+                        <button class="download-btn" data-id="2">
+                            <i class="fas fa-download"></i>
+                            下载图包
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 新增图包 -->
+                <div class="product-card" data-category="july" data-name="极光之夜" data-desc="梦幻极光与星空夜景的高清素材合集">
+                    <div class="product-image">
+                        <img src="https://s21.ax1x.com/2025/07/05/pVKrIxA.jpg" alt="极光之夜图包">
+                        <span class="product-tag">7月图包</span>
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-name">7月图包第二期</h3>
+                        <p class="product-desc">🔥本次更新图包，黑崎一护、赵云 - 乘龙·铭钟鼎、裴擒虎 - 祥瑞亨通、澜 - 年限、勘探员 - 盛夏飞盘 ！</p>
+                        <button class="download-btn" data-id="4">
+                            <i class="fas fa-download"></i>
+                            下载图包
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <p>© 2023 图包商店 | 专注高品质数字素材资源</p>
+        <p>本网站仅用于展示和学习目的 | 素材仅供个人使用</p>
+    </footer>
+
+    <script>
+        // 图包数据
+        const assets = [
+            { 
+                id: 1, 
+                name: "6月图包第一期", 
+                category: "june", 
+                desc: "🔥本次更新图包，澜-花海、孙策-奇旅、亚连-落雪白狼、马可波罗-妄想实况 ！",
+                imageUrl: "https://link3.cc/silong6969",
+                detailImageUrl: "https://s21.ax1x.com/2025/07/05/pVKs1IO.jpg",
+            },
+            { 
+                id: 2, 
+                name: "夏日幻境系列", 
+                category: "july", 
+                desc: "夏日海滩、光影效果和透明材质的高清素材合集，包含水面反射、气泡等透明元素",
+                imageUrl: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=800",
+                detailImageUrl: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=800",
+            },
+            { 
+                id: 3, 
+                name: "赛博空间系列", 
+                category: "june", 
+                desc: "未来科技感十足的虚拟空间和数字界面素材，包含HUD元素和科技网格背景",
+                imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800",
+                detailImageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800",
+            },
+            { 
+                id: 4, 
+                name: "极光之夜系列", 
+                category: "july", 
+                desc: "梦幻极光与星空夜景的高清素材合集，包含多种色彩变化的极光效果",
+                imageUrl: "https://images.unsplash.com/photo-1505506874110-6a7a69069a08?q=80&w=800",
+                detailImageUrl: "https://images.unsplash.com/photo-1505506874110-6a7a69069a08?q=80&w=800",
+            }
+        ];
+        
+        // DOM元素
+        const modal = document.getElementById('productModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalImage = document.getElementById('modalImage');
+        const modalDesc = document.getElementById('modalDesc');
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 创建背景几何图形和光斑
+            createBackgroundEffects();
+            
+            // 初始化事件监听
+            initEventListeners();
+            
+            // 关闭弹窗按钮
+            closeModalBtn.addEventListener('click', closeModal);
+            
+            // 点击弹窗外部关闭
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+            
+            // 下载选项点击事件
+            document.querySelectorAll('.download-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const link = this.dataset.link;
+                    showNotification(`正在跳转到下载链接: ${this.querySelector('.option-name').textContent}`);
+                    
+                    // 添加点击动画
+                    this.classList.add('clicked');
+                    setTimeout(() => {
+                        this.classList.remove('clicked');
+                    }, 300);
+                });
+            });
+        });
+        
+        // 创建背景几何图形和光斑
+        function createBackgroundEffects() {
+            const background = document.getElementById('background');
+            const geometricCount = 15;
+            const lightSpotCount = 20;
+            const pulseCount = 3;
+            
+            for (let i = 0; i < geometricCount; i++) {
+                const shape = document.createElement('div');
+                shape.classList.add('geometric-shape');
+                
+                // 随机位置
+                const top = Math.random() * 100;
+                const left = Math.random() * 100;
+                
+                // 随机大小
+                const width = 50 + Math.random() * 150;
+                const height = 50 + Math.random() * 150;
+                
+                // 随机形状
+                const shapeType = Math.floor(Math.random() * 3);
+                if (shapeType === 0) {
+                    shape.style.borderRadius = '50%';
+                } else if (shapeType === 1) {
+                    shape.style.transform = 'rotate(45deg)';
+                }
+                
+                shape.style.top = `${top}%`;
+                shape.style.left = `${left}%`;
+                shape.style.width = `${width}px`;
+                shape.style.height = `${height}px`;
+                
+                // 随机动画
+                shape.style.animationDuration = `${10 + Math.random() * 20}s`;
+                
+                background.appendChild(shape);
+            }
+            
+            for (let i = 0; i < lightSpotCount; i++) {
+                const light = document.createElement('div');
+                light.classList.add('light-spot');
+                
+                // 随机位置
+                const top = Math.random() * 100;
+                const left = Math.random() * 100;
+                
+                // 随机大小和动画延迟
+                const size = 5 + Math.random() * 10;
+                const delay = Math.random() * 4;
+                
+                light.style.top = `${top}%`;
+                light.style.left = `${left}%`;
+                light.style.width = `${size}px`;
+                light.style.height = `${size}px`;
+                light.style.animationDelay = `${delay}s`;
+                
+                background.appendChild(light);
+            }
+            
+            for (let i = 0; i < pulseCount; i++) {
+                const pulse = document.createElement('div');
+                pulse.classList.add('neon-pulse');
+                
+                // 随机位置
+                const top = Math.random() * 100;
+                const left = Math.random() * 100;
+                
+                // 随机动画延迟
+                const delay = Math.random() * 8;
+                
+                pulse.style.top = `${top}%`;
+                pulse.style.left = `${left}%`;
+                pulse.style.animationDelay = `${delay}s`;
+                
+                background.appendChild(pulse);
+            }
+        }
+        
+        // 显示通知
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            notification.innerHTML = isError 
+                ? `<i class="fas fa-exclamation-circle"></i><span>${message}</span>`
+                : `<i class="fas fa-check-circle"></i><span>${message}</span>`;
+            
+            notification.className = isError ? 'notification error' : 'notification';
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 初始化事件监听
+        function initEventListeners() {
+            // 分类按钮点击事件
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 添加点击动画
+                    this.classList.add('clicked');
+                    setTimeout(() => {
+                        this.classList.remove('clicked');
+                    }, 300);
+                    
+                    // 更新按钮状态
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 筛选图包
+                    filterSoftware(this.dataset.category);
+                });
+            });
+            
+            // 搜索按钮点击事件
+            document.getElementById('searchBtn').addEventListener('click', function() {
+                this.classList.add('clicked');
+                setTimeout(() => {
+                    this.classList.remove('clicked');
+                }, 300);
+                performSearch();
+            });
+            
+            // 搜索框回车事件
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            // 下载按钮点击事件
+            document.querySelectorAll('.download-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.classList.add('clicked');
+                    setTimeout(() => {
+                        this.classList.remove('clicked');
+                    }, 300);
+                    
+                    const assetId = parseInt(this.dataset.id);
+                    showAssetDetails(assetId);
+                });
+            });
+        }
+        
+        // 显示商品详情弹窗
+        function showAssetDetails(assetId) {
+            const asset = assets.find(a => a.id === assetId);
+            if (!asset) return;
+            
+            // 填充商品数据
+            modalTitle.textContent = asset.name;
+            modalImage.src = asset.detailImageUrl;
+            modalDesc.textContent = asset.desc;
+            
+            // 显示弹窗
+            modal.classList.add('active');
+            
+            // 禁用背景滚动
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 关闭弹窗
+        function closeModal() {
+            modal.classList.remove('active');
+            
+            // 启用背景滚动
+            document.body.style.overflow = '';
+        }
+        
+        // 筛选图包
+        function filterSoftware(category) {
+            const assetCards = document.querySelectorAll('.product-card');
+            
+            assetCards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                    
+                    // 滚动到第一个可见商品
+                    if (category !== 'all') {
+                        setTimeout(() => {
+                            card.classList.add('highlight');
+                            window.scrollTo({
+                                top: card.offsetTop - 150,
+                                behavior: 'smooth'
+                            });
+                            
+                            // 移除高亮效果
+                            setTimeout(() => {
+                                card.classList.remove('highlight');
+                            }, 2000);
+                        }, 300);
+                    }
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        // 执行搜索
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            if (!query) {
+                // 如果搜索框为空，显示所有商品
+                document.querySelectorAll('.product-card').forEach(card => {
+                    card.style.display = 'block';
+                });
+                return;
+            }
+            
+            // 查找匹配的图包
+            const assetCards = document.querySelectorAll('.product-card');
+            let found = false;
+            
+            assetCards.forEach(card => {
+                const name = card.dataset.name.toLowerCase();
+                const desc = card.dataset.desc.toLowerCase();
+                
+                if (name.includes(query) || desc.includes(query)) {
+                    card.style.display = 'block';
+                    
+                    if (!found) {
+                        // 滚动到第一个匹配的商品
+                        card.classList.add('highlight');
+                        window.scrollTo({
+                            top: card.offsetTop - 150,
+                            behavior: 'smooth'
+                        });
+                        
+                        // 移除高亮效果
+                        setTimeout(() => {
+                            card.classList.remove('highlight');
+                        }, 2000);
+                        
+                        found = true;
+                    }
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            if (!found) {
+                showNotification('未找到匹配的图包', true);
+            }
+        }
+    </script>
+</body>
+</html>
