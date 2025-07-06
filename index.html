@@ -1,4 +1,4 @@
-"<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -1359,7 +1359,7 @@
             
             <div class="activation-instructions">
                 <p><strong>首次注册的账号需要激活码：</strong></p>
-                <p>支付成功后把支付记录发给群主申请进群，通过后复制下方内容发送到会员群：</p>
+                <p>复制下方内容发送到范特西粉丝群即可免费激活账号，钻石商品需要进入会员群才可以兑换钻石购买，可点击支付之后发送支付记录给群主即可进入会员群</p>
                 <div class="activation-text" id="activationText">@Q群管家  <span id="activationQQ"></span> <span id="activationName"></span> 【<span id="activationCode"></span>】</div>
                 
                 <div style="display: flex; gap: 8px; margin-top: 8px;">
@@ -1619,9 +1619,9 @@ wechatPay.addEventListener('click', function() {
     wechatQrcode.style.display = 'block';
     alipayQrcode.style.display = 'none';
     shareBtn.style.display = 'block';
-    shareBtn.innerHTML = '<i class="fab fa-weixin"></i> 去微信公众号支付';
+    shareBtn.innerHTML = '<i class="fab fa-weixin"></i> 去微信支付';
     shareBtn.onclick = function() {
-        window.location.href = 'https://s21.ax1x.com/2025/07/04/pVKMklj.jpg';
+        window.location.href = 'wxzf.jpg';
         showStatusMessage("已跳转至微信支付页面", "success");
     };
 });
@@ -1908,6 +1908,7 @@ alipayPay.addEventListener('click', function() {
                 unbanPasswordInput.value = "";
                 unbanStatus.style.display = 'none';
             });
+            
             
             // 帮助链接 
             helpLink.addEventListener('click', function(e) {
@@ -2419,10 +2420,10 @@ alipayPay.addEventListener('click', function() {
         // 设置二维码信息
         if (type === 'wechat') {
           qrcodeTitle.textContent = '微信支付二维码';
-          qrcodeImage.src = 'https://s21.ax1x.com/2025/07/04/pVKMklj.jpg'; // 微信二维码路径
+          qrcodeImage.src = 'wxzf.jpg'; // 微信二维码路径
         } else if (type === 'alipay') {
           qrcodeTitle.textContent = '支付宝支付二维码';
-          qrcodeImage.src = 'zfbzf.html'; // 支付宝二维码路径
+          qrcodeImage.src = 'zfbzf.jpg'; // 支付宝二维码路径
         }
         qrcodeImage.alt = `${type === 'wechat' ? '微信' : '支付宝'}支付二维码`;
       });
