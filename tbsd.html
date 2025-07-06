@@ -1472,14 +1472,14 @@
         let usedCodes = JSON.parse(localStorage.getItem('usedCodes')) || [];
         
         if (userGold === null) {
-            userGold = 100; // 初始金币
+            userGold = 0; // 初始金币
             localStorage.setItem('userGold', userGold);
         } else {
             userGold = parseInt(userGold);
         }
         
         if (userDiamonds === null) {
-            userDiamonds = 100; // 初始钻石
+            userDiamonds = 0; // 初始钻石
             localStorage.setItem('userDiamonds', userDiamonds);
         } else {
             userDiamonds = parseInt(userDiamonds);
